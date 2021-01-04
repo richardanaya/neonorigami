@@ -1,0 +1,30 @@
+{
+  "name": "aframe-neonorigami",
+  "version": "0.0.0",
+  "description": "Neon Origami components for A-Frame",
+  "main": "aframe-neonorigami.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/richardanaya/neonorigami.git"
+  },
+  "keywords": [
+    "virtualreality",
+    "webassembly"
+  ],
+  "author": "Richard Anaya",
+  "license": "MIT OR Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/richardanaya/neonorigami/issues"
+  },
+  "homepage": "https://github.com/richardanaya/neonorigami#readme",
+  "devDependencies": {
+    "@rollup/plugin-node-resolve": "^11.0.1",
+    "rollup-plugin-commonjs": "^10.1.0",
+    "rollup-plugin-livereload": "^2.0.0",
+    "rollup-plugin-node-resolve": "^5.2.0",
+    "rollup-plugin-serve": "^1.1.0"
+  }
+}

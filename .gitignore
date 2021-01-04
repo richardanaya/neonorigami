@@ -2,3 +2,4 @@ node_modules
 target
 Cargo.lock
 js/neonorigami/dist/*.js
+js/aframe-neonorigami/dist/*.js

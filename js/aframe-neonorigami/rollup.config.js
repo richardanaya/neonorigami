@@ -4,16 +4,16 @@ import commonjs from 'rollup-plugin-commonjs';
 export default {
   input: 'src/main.js',
   output: [{
-    file: 'dist/neonorigami.js',
+    file: 'dist/aframe-neonorigami.js',
     format: 'iife',
-    name: 'NeonOrigami'
+    name: 'AFrameNeonOrigami'
   },{
-    file: 'neonorigami.js',
+    file: 'aframe-neonorigami.js',
     format: 'iife',
-    name: 'NeonOrigami'
+    name: 'AFrameNeonOrigami'
   }],
   plugins: [
     resolve(),
-    commonjs()
+    commonjs(),
   ]
 };

@@ -1,4 +1,8 @@
+dev:
+	cd js/neonorigami && rollup -c -w
 build:
-	rollup -c
+	cd js/neonorigami && rollup -c
+publish:
+	cd js/neonorigami && npm publish
 serve:
 	python3 -m http.server

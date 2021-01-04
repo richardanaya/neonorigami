@@ -11,9 +11,9 @@ A supported device:
 
 ## Setup
 
-1. Use the public access point [Neon Origami](http://neonorigami.com)
+* Use the public access point [Neon Origami](http://neonorigami.com)
 
-2. Setup your own access point by creating an `index.html`
+* Setup your own access point by creating an `index.html`
 
 ```html
 <html>
@@ -30,10 +30,8 @@ A supported device:
 # How can I use Neon Origami components in A-Frame?
 
 ```html
-<!DOCTYPE html>
 <html>
   <head>
-    <meta charset="utf-8">
     <script src="https://aframe.io/releases/latest/aframe.min.js"></script>
     <script src="https://unpkg.com/neonorigami/aframe-neonorigami.js"></script>
   </head>

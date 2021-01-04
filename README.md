@@ -7,7 +7,7 @@ An open-source virtual world platform for the future.
 ## Requirements
 
 A supported device:
-* Oculus Quest 1 or 2
+* Oculus Quest 1 or 2 using Oculus Browser or Firefox Reality Browser
 
 ## Setup
 

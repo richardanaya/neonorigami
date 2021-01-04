@@ -15,7 +15,7 @@ Or setup your own access point by creating an `index.html`
         <script src="https://unpkg.com/neonorigami/neonorigami.js"></script>
     </head>
     <body>
-        <neon-origami></neon-origami>
+        <neon-origami fullscreen></neon-origami>
     </body>
 </html>
 ```

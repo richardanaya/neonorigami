@@ -32,7 +32,7 @@ A supported device:
 ```html
 <html>
   <head>
-    <script src="https://aframe.io/releases/latest/aframe.min.js"></script>
+    <script src="https://aframe.io/releases/1.1.0/aframe.min.js"></script>
     <script src="https://unpkg.com/neonorigami/aframe-neonorigami.js"></script>
   </head>
   <body>

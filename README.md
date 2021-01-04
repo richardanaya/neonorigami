@@ -11,9 +11,9 @@ A supported device:
 
 ## Setup
 
-Use the public access point [Neon Origami](http://neonorigami.com)
+1. Use the public access point [Neon Origami](http://neonorigami.com)
 
-Or setup your own access point by creating an `index.html`
+2. Setup your own access point by creating an `index.html`
 
 ```html
 <html>

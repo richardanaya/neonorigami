@@ -1,4 +1,4 @@
-# ＮＥＯＮ　ＯＲＩＧＡＭＩ
+# ＮＥＯＮＯＲＩＧＡＭＩ
 
 An open-source virtual world platform for the future.
 

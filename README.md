@@ -4,6 +4,13 @@ An open-source virtual world platform for the future.
 
 # How do I connect to the virtual web?
 
+## Requirements
+
+A supported device:
+* Oculus Quest 1/2
+
+## Setup
+
 Use the public access point [Neon Origami](http://neonorigami.com)
 
 Or setup your own access point by creating an `index.html`

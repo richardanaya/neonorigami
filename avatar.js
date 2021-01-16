@@ -17,7 +17,7 @@ function str2ab(str) {
     return buf;
 }
 
-const hasIdentityTemplate = () => html`<article>
+const hasIdentityTemplate = () => html`<article class="card">
     <section>
         <h1>Crypto Avatar</h1>
         <p>Hello <b>${currentIdentity.name}</b></p>
@@ -37,7 +37,7 @@ const hasIdentityTemplate = () => html`<article>
         <button @click="${savedPrivateKey}">I have put it some place safe</button>
     </section>
     ` : undefined}
-    <section >
+    <section>
         <h2>Preview</h2>
         <a-scene embedded>
             <a-sphere position="0 1.25 -5" radius="1.25" color="${currentIdentity.skin_color}"></a-sphere>
@@ -53,7 +53,7 @@ const hasIdentityTemplate = () => html`<article>
     </section>
 </article>`;
 
-const createIdentityTemplate = () => html`<article>
+const createIdentityTemplate = () => html`<article class="card">
     <section>
         <h1>Crypto Avatar</h1>
         <p>Welcome to this tool for creating/modifying avatars to use on virtual worlds. No information here will be

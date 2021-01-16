@@ -41,6 +41,10 @@ const hasIdentityTemplate = () => html`<article class="card">
         <h2>Preview</h2>
         <a-scene embedded>
             <a-sphere id="avatar" position="0 1.25 -5" radius="1.25" color="${currentIdentity.skin_color}"></a-sphere>
+            <a-sphere position="-.5 2.20 -4.25" radius=".25" color="white"></a-sphere>
+            <a-sphere position=".5 2.20 -4.25" radius=".25" color="white"></a-sphere>
+            <a-sphere position="-.5 2.10 -4.0" radius=".1" color="black"></a-sphere>
+            <a-sphere position=".5 2.10 -4.0" radius=".1" color="black"></a-sphere>
             <a-plane position="0 0 -4" rotation="-90 0 0" width="4" height="4" color="#7BC8A4"></a-plane>
             <a-sky color="#ECECEC"></a-sky>
         </a-scene>

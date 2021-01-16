@@ -80,6 +80,7 @@ function skinChange(){
     let av = document.querySelector("#avatar");
     av.setAttribute("color",this.value);
     currentIdentity.skin_color = this.value;
+    window.localStorage.setItem("neonorigami_identity", JSON.stringify(currentIdentity));
 }
 
 function savedPrivateKey() {

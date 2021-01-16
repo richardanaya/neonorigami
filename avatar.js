@@ -19,7 +19,7 @@ function str2ab(str) {
 
 const hasIdentityTemplate = () => html`
 <div class="flex one center">
-    <div style="max-width: 960px">
+    <div style="max-width: 960px; margin: 15px;">
         <article>
             <section>
                 <h1>Crypto Avatar</h1>
@@ -43,7 +43,7 @@ const hasIdentityTemplate = () => html`
             </section>
             <section>
                 <h2>Preview</h2>
-                <a-scene embedded>
+                <a-scene embedded style="height: 0; padding-bottom: 60%;">
                     <a-sphere id="avatar" position="0 1.25 -5" radius="1.25" color="${currentIdentity.skin_color}">
                     </a-sphere>
                     <a-sphere position="-.5 2.20 -4.25" radius=".25" color="white"></a-sphere>
@@ -66,7 +66,7 @@ const hasIdentityTemplate = () => html`
 
 const createIdentityTemplate = () => html`
 <div class="flex one center">
-    <div style="max-width: 960px">
+    <div style="max-width: 960px; margin: 15px;">
         <article>
             <section>
                 <h1>Crypto Avatar</h1>

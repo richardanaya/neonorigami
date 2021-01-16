@@ -17,11 +17,16 @@ function str2ab(str) {
     return buf;
 }
 
-const hasIdentityTemplate = () => html`<article class="card">
+const hasIdentityTemplate = () => html`<article>
     <section>
         <h1>Crypto Avatar</h1>
         <p>Hello <b>${currentIdentity.name}</b></p>
         <p>This is where you will be able to modify your avatar and export out it's data to use in virtual worlds.</p>
+    </section>
+    <section>
+        <h2>Appearance</h2>
+        <label for="skin_color">Skin Color:</label>
+        <input @change="${skinChange} name="skin_color" type="color" value="${currentIdentity.skin_color}">
     </section>
     ${firstTime ? html`
     <section>
@@ -32,6 +37,14 @@ const hasIdentityTemplate = () => html`<article class="card">
         <button @click="${savedPrivateKey}">I have put it some place safe</button>
     </section>
     ` : undefined}
+    <section >
+        <h2>Preview</h2>
+        <a-scene embedded>
+            <a-sphere position="0 1.25 -5" radius="1.25" color="${currentIdentity.skin_color}"></a-sphere>
+            <a-plane position="0 0 -4" rotation="-90 0 0" width="4" height="4" color="#7BC8A4"></a-plane>
+            <a-sky color="#ECECEC"></a-sky>
+        </a-scene>
+    </section>
     <section>
         <button @click="${exportAvatar}">Export Avatar</button>
         <button @click="${exit}">I'm Done</button>
@@ -40,7 +53,7 @@ const hasIdentityTemplate = () => html`<article class="card">
     </section>
 </article>`;
 
-const createIdentityTemplate = () => html`<article class="card">
+const createIdentityTemplate = () => html`<article>
     <section>
         <h1>Crypto Avatar</h1>
         <p>Welcome to this tool for creating/modifying avatars to use on virtual worlds. No information here will be
@@ -61,6 +74,11 @@ const createIdentityTemplate = () => html`<article class="card">
     </section>
 </article>
 `;
+
+function skinChange(){
+    currentIdentity.skin_color = this.value;
+    renderAll();
+}
 
 function savedPrivateKey() {
     firstTime = false;
@@ -133,7 +151,8 @@ async function createIdentity() {
     window.localStorage.setItem("neonorigami_private_key", privateKey);
     window.localStorage.setItem("neonorigami_identity", JSON.stringify({
         name,
-        public_key: pub
+        public_key: pub,
+        skin_color: "#EF2D5E",
     }));
     renderAll()
 }

@@ -23,20 +23,20 @@ const hasIdentityTemplate = () => html`<article class="card">
         <p>Hello <b>${currentIdentity.name}</b></p>
         <p>This is where you will be able to modify your avatar and export out it's data to use in virtual worlds.</p>
     </section>
-    <section>
-        <h2>Appearance</h2>
-        <label for="skin_color">Skin Color:</label>
-        <input @change="${skinChange} name="skin_color" type="color" value="${currentIdentity.skin_color}">
-    </section>
     ${firstTime ? html`
     <section>
-        <h3>Don't forget!</h3>
+        <h2>Don't forget!</h2>
         <p>This is your private key, save it somewhere safe. If you lose this private key you will
             lose your ability to modify or verify ownership of this avatar.</p>
         <textarea>${privateKey}</textarea>
         <button @click="${savedPrivateKey}">I have put it some place safe</button>
     </section>
     ` : undefined}
+    <section>
+        <h2>Appearance</h2>
+        <label for="skin_color">Skin Color:</label>
+        <input @change="${skinChange} name="skin_color" type="color" value="${currentIdentity.skin_color}">
+    </section>
     <section>
         <h2>Preview</h2>
         <a-scene embedded>

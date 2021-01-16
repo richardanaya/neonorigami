@@ -46,10 +46,10 @@ const hasIdentityTemplate = () => html`<article class="card">
         </a-scene>
     </section>
     <section>
+    ${exportedAvatar !== null ? html`<p>Here is your avatar data to take out into the world!
+            <textarea>${exportedAvatar}</textarea>` : undefined}
         <button @click="${exportAvatar}">Export Avatar</button>
         <button @click="${exit}">I'm Done</button>
-        ${exportedAvatar !== null ? html`<p>Here is your avatar data to take out into the world!
-            <textarea>${exportedAvatar}</textarea>` : undefined}</p>
     </section>
 </article>`;
 
@@ -76,6 +76,7 @@ const createIdentityTemplate = () => html`<article class="card">
 `;
 
 function skinChange(){
+    exportedAvatar = null;
     currentIdentity.skin_color = this.value;
     renderAll();
 }

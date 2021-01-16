@@ -123,7 +123,6 @@ function exit() {
 
 
 async function exportAvatar() {
-    console.log("Exporting")
     delete currentIdentity.signature;
     const priv = await window.crypto.subtle.importKey(
         "jwk",
@@ -164,13 +163,10 @@ async function createIdentity() {
         keys.publicKey
     );
 
-    console.log("private")
     let priv = await window.crypto.subtle.exportKey(
         "jwk",
         keys.privateKey
     );
-    console.log("done private")
-    console.log(priv)
     firstTime = true;
     const name = document.querySelector("#avatar_name").value;
     privateKey = JSON.stringify(priv)

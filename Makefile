@@ -8,4 +8,4 @@ dev-components:
 publish:
 	cd js/neonorigami && npm publish
 serve:
-	python3 -m http.server
+	python3 server.py

@@ -57,8 +57,8 @@ const hasIdentityTemplate = () => html`
             <section>
                 ${exportedAvatar !== null ? html`<p>Here is your avatar data to take out into the world!
                     <textarea>${exportedAvatar}</textarea></p>` : undefined}
-                    <button @click="${exportAvatar}">Export Avatar</button>
-                    <button @click="${exit}">I'm Done</button>
+                <button @click="${exportAvatar}">Export Avatar</button>
+                <button @click="${exit}">I'm Done</button>
             </section>
         </article>
     </div>
@@ -71,8 +71,7 @@ const createIdentityTemplate = () => html`
             <section>
                 <h1>Crypto Avatar</h1>
                 <p>Welcome to this tool for creating/modifying avatars to use on virtual worlds. No information here
-                    will be
-                    stored on any server.</p>
+                    will be uploaded or stored on any server. Data will remain only locally in your browser.</p>
                 <h2>Are you new?</h2>
                 <p>It looks like you don't have an active avatar identity. Would you like to create one? Give us a name
                     you'd

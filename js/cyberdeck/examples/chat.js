@@ -1,5 +1,3 @@
-import { CyberDeck } from "./js/cyberdeck/cyberdeck.js"
-
 async function run() {
     if (queryString("join") === null) {
         let [local_uuid, remote_uuid, dataChannel] = CyberDeck.createInvite({

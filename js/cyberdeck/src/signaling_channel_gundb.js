@@ -1,3 +1,5 @@
+import Gun from 'gun/gun'
+
 export class SignalingChannel {
     constructor(gundb_origin, local_uuid, remote_uuid) {
         this.gun = Gun({ peers: ['https://' + gundb_origin + "/gun"] });

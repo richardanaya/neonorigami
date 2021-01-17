@@ -1,8 +1,8 @@
 {
   "name": "cyberdeck",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "A networking library for the virtual web",
-  "main": "aframe-neonorigami.js",
+  "main": "src/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -19,5 +19,15 @@
   "bugs": {
     "url": "https://github.com/richardanaya/neonorigami/issues"
   },
-  "homepage": "https://github.com/richardanaya/neonorigami#readme"
+  "homepage": "https://github.com/richardanaya/neonorigami#readme",
+  "dependencies": {
+    "gun": "^0.2020.520"
+  },
+  "devDependencies": {
+    "@rollup/plugin-node-resolve": "^11.0.1",
+    "rollup-plugin-commonjs": "^10.1.0",
+    "rollup-plugin-livereload": "^2.0.0",
+    "rollup-plugin-node-resolve": "^5.2.0",
+    "rollup-plugin-serve": "^1.1.0"
+  }
 }

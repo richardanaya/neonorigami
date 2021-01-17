@@ -9,6 +9,8 @@ Suppoted tech:
 
 ## How to Use
 
+Here's an extremely minimal scenario using STUN only
+
 ```html
 <script src="https://cdn.jsdelivr.net/npm/gun/gun.js"></script>
 <script type="module">

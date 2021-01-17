@@ -18,7 +18,7 @@ function getParameterByName(name, url = window.location.href) {
 let gundb = getParameterByName("gundb");
 let stun = getParameterByName("stun");
 
-const gun = Gun({ peers: ['https://'+gundb+"/gun"] });
+const gun = Gun({ peers: ['https://' + gundb + "/gun"] });
 
 class SignalingChannel {
     constructor(local_uuid, remote_uuid) {
@@ -98,59 +98,6 @@ pc.ontrack = (event) => {
 
 pc.oniceconnectionstatechange = e => console.log("Connection state:" + pc.iceConnectionState);
 
-// Call start() to initiate.
-async function start() {
-    try {
-        if (isServer) {
-            console.log('Creating data channel');
-            const dataChannel =
-                pc.createDataChannel("myLabel");
-
-            dataChannel.onerror = (error) => {
-                console.log("Data Channel Error:", error);
-            };
-
-            dataChannel.onmessage = (event) => {
-                console.log("Got Data Channel Message:", event.data);
-            };
-
-            dataChannel.onopen = () => {
-                console.log("opened")
-                document.body.innerHTML = "Sent the peer a message!"
-                dataChannel.send("Hello World!");
-            };
-
-            dataChannel.onclose = () => {
-                console.log("The Data Channel is Closed");
-            };
-        } else {
-            document.body.innerHTML = "Waiting to receive network info of server ... "
-            pc.ondatachannel = function (ev) {
-                console.log('Data channel is created!');
-                const dataChannel = ev.channel;
-                dataChannel.onerror = (error) => {
-                    console.log("Data Channel Error:", error);
-                };
-
-                dataChannel.onmessage = (event) => {
-                    document.body.innerHTML = "Got Data Channel Message:" + event.data;
-                };
-
-                dataChannel.onopen = () => {
-                    console.log("opened")
-                    document.body.innerHTML = "data channel opened with peer!"
-                };
-
-                dataChannel.onclose = () => {
-                    console.log("The Data Channel is Closed");
-                };
-            };
-        }
-    } catch (err) {
-        console.error(err);
-    }
-}
-
 signaling.addListener(async ({ desc, candidate }) => {
     try {
         if (desc) {
@@ -178,4 +125,48 @@ signaling.addListener(async ({ desc, candidate }) => {
     }
 });
 
-start()
+if (isServer) {
+    console.log('Creating data channel');
+    const dataChannel =
+        pc.createDataChannel("myLabel");
+
+    dataChannel.onerror = (error) => {
+        console.log("Data Channel Error:", error);
+    };
+
+    dataChannel.onmessage = (event) => {
+        console.log("Got Data Channel Message:", event.data);
+    };
+
+    dataChannel.onopen = () => {
+        console.log("opened")
+        document.body.innerHTML = "Sent the peer a message!"
+        dataChannel.send("Hello World!");
+    };
+
+    dataChannel.onclose = () => {
+        console.log("The Data Channel is Closed");
+    };
+} else {
+    document.body.innerHTML = "Waiting to receive network info of server ... "
+    pc.ondatachannel = function (ev) {
+        console.log('Data channel is created!');
+        const dataChannel = ev.channel;
+        dataChannel.onerror = (error) => {
+            console.log("Data Channel Error:", error);
+        };
+
+        dataChannel.onmessage = (event) => {
+            document.body.innerHTML = "Got Data Channel Message:" + event.data;
+        };
+
+        dataChannel.onopen = () => {
+            console.log("opened")
+            document.body.innerHTML = "data channel opened with peer!"
+        };
+
+        dataChannel.onclose = () => {
+            console.log("The Data Channel is Closed");
+        };
+    };
+}

@@ -1,4 +1,4 @@
-import {CyberDeck} from "./js/cyberdeck/index.js"
+import {CyberDeck} from "./js/cyberdeck/cyberdeck.js"
 
 export function getParameterByName(name, url = window.location.href) {
     name = name.replace(/[\[\]]/g, '\\$&');
@@ -9,8 +9,11 @@ export function getParameterByName(name, url = window.location.href) {
     return decodeURIComponent(results[2].replace(/\+/g, ' '));
 }
 
+function log(msg){
+    document.querySelector('textarea').innerHTML = msg+"\n"+document.querySelector('textarea').innerHTML;
+}
+
 (async function () {
-    debugger;
     const gundb = getParameterByName("gundb");
     const stun = getParameterByName("stun");
     const xirsys = getParameterByName("xirsys");
@@ -29,24 +32,28 @@ export function getParameterByName(name, url = window.location.href) {
         if (xirsys) {
             url = window.origin + window.location.pathname + `?gundb=${gundb}&xirsys=${xirsys}&join=gun&local=${remote_uuid}&remote=${local_uuid}`;
         }
-        console.log("Send this url to the other person: " + url);
+        log("Send this url to the other person: " + url);
         dataChannel.onerror = (error) => {
-            console.log("Data Channel Error:", error);
+            log("Data Channel Error:", error);
         };
 
         dataChannel.onmessage = (event) => {
-            console.log("Got Data Channel Message:", event.data);
+            log("Client: "+ event.data);
         };
 
         dataChannel.onopen = () => {
-            console.log("opened")
-            document.body.innerHTML = "Sent the peer a message!"
-            dataChannel.send("Hello World!");
+            log("Connection established")
+            dataChannel.send("Server has entered the chat");
         };
 
         dataChannel.onclose = () => {
-            console.log("The Data Channel is Closed");
+            log("Client has left")
         };
+        document.querySelector("button").addEventListener("click",()=>{
+            log("Server: "+document.querySelector("input").value)
+            dataChannel.send(document.querySelector("input").value)
+            document.querySelector("input").value = ""
+        })
     } else {
         let dataChannel = await CyberDeck.joinInvite({
             gundb,
@@ -56,20 +63,25 @@ export function getParameterByName(name, url = window.location.href) {
             remote
         });
         dataChannel.onerror = (error) => {
-            console.error("Data Channel Error:", error);
+            log("Data Channel Error:", error);
         };
 
         dataChannel.onmessage = (event) => {
-            document.body.innerHTML = "Got Data Channel Message:" + event.data;
+            log("Server: "+ event.data);
         };
 
         dataChannel.onopen = () => {
-            console.log("opened")
-            document.body.innerHTML = "data channel opened with peer!"
+            log("Connection established")
+            dataChannel.send("Client has entered the chat");
         };
 
         dataChannel.onclose = () => {
-            console.log("The Data Channel is Closed");
+            log("Server has left")
         };
+        document.querySelector("button").addEventListener("click",()=>{
+            log("Client: "+document.querySelector("input").value)
+            dataChannel.send(document.querySelector("input").value)
+            document.querySelector("input").value = ""
+        })
     }
 })()

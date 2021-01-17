@@ -1,4 +1,24 @@
-const gun = Gun({ peers: ['https://gunjs.herokuapp.com/gun'] });
+function uuid() {
+    function _p8(s) {
+        var p = (Math.random().toString(16) + "000000000").substr(2, 8);
+        return s ? "-" + p.substr(0, 4) + "-" + p.substr(4, 4) : p;
+    }
+    return _p8() + _p8(true) + _p8(true) + _p8();
+}
+
+function getParameterByName(name, url = window.location.href) {
+    name = name.replace(/[\[\]]/g, '\\$&');
+    var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+        results = regex.exec(url);
+    if (!results) return null;
+    if (!results[2]) return '';
+    return decodeURIComponent(results[2].replace(/\+/g, ' '));
+}
+
+let gundb = getParameterByName("gundb");
+let stun = getParameterByName("stun");
+
+const gun = Gun({ peers: ['https://'+gundb+"/gun"] });
 
 class SignalingChannel {
     constructor(local_uuid, remote_uuid) {
@@ -34,32 +54,13 @@ class SignalingChannel {
     }
 }
 
-function uuid() {
-    function _p8(s) {
-        var p = (Math.random().toString(16) + "000000000").substr(2, 8);
-        return s ? "-" + p.substr(0, 4) + "-" + p.substr(4, 4) : p;
-    }
-    return _p8() + _p8(true) + _p8(true) + _p8();
-}
-
-function getParameterByName(name, url = window.location.href) {
-    name = name.replace(/[\[\]]/g, '\\$&');
-    var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
-        results = regex.exec(url);
-    if (!results) return null;
-    if (!results[2]) return '';
-    return decodeURIComponent(results[2].replace(/\+/g, ' '));
-}
-
-let stun = getParameterByName("stun");
-
 const isServer = getParameterByName("join") === null;
 
 let local_uuid = uuid();
 let remote_uuid = uuid();
 
 if (isServer) {
-    document.body.innerHTML = "Send this url to the other person: <br>" + window.origin + window.location.pathname + `?stun=${stun}&join=gun&local=${remote_uuid}&remote=${local_uuid}`;
+    document.body.innerHTML = "Send this url to the other person: <br>" + window.origin + window.location.pathname + `?gundb=${gundb}&stun=${stun}&join=gun&local=${remote_uuid}&remote=${local_uuid}`;
 } else {
     const tmp = local_uuid;
     local_uuid = getParameterByName("local");

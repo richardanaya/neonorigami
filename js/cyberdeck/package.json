@@ -1,6 +1,6 @@
 {
   "name": "cyberdeck",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "A networking library for the virtual web",
   "main": "aframe-neonorigami.js",
   "scripts": {

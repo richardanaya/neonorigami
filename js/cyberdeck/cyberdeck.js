@@ -54,7 +54,7 @@ export class CyberDeck {
         };
 
         pc.oniceconnectionstatechange = e => {
-            if (config.debug) console.log("cyberdeck: peer connection state `" + pc.iceConnectionState+"`");
+            if (config.debug) console.log("cyberdeck: peer connection state `" + pc.iceConnectionState + "`");
         }
 
         signaling.addListener(async ({ desc, candidate }) => {
@@ -96,7 +96,65 @@ export class CyberDeck {
         } else {
             if (config.debug) console.log("cyberdeck: using string data channel type");
         }
-        return [config.local, config.remote, dataChannel];
+
+        let errorPromise = new Promise(resolve => {
+            dataChannel.onerror = (error) => {
+                resolve({ error })
+            };
+        })
+        let messagePromise = new Promise(resolve => {
+            dataChannel.onmessage = (message) => {
+                resolve({ message })
+            };
+        })
+        let openPromise = new Promise(resolve => {
+            dataChannel.onopen = (open) => {
+                resolve({ open })
+            };
+        })
+        let closePromise = new Promise(resolve => {
+            dataChannel.onclose = (close) => {
+                resolve({ close })
+            };
+        })
+
+        return [config.local, config.remote, {
+            send: dataChannel.send.bind(dataChannel),
+            [Symbol.asyncIterator]() {
+                return {
+                    async next() {
+                        let result = await Promise.race([errorPromise, messagePromise, openPromise, closePromise]);
+                        if (result.error) {
+                            errorPromise = new Promise(resolve => {
+                                dataChannel.onerror = (error) => {
+                                    resolve({ error })
+                                };
+                            })
+                        } else if (result.message) {
+                            messagePromise = new Promise(resolve => {
+                                dataChannel.onmessage = (message) => {
+                                    resolve({ message })
+                                };
+                            })
+                        } else if (result.open) {
+                            openPromise = new Promise(resolve => {
+                                dataChannel.onopen = (open) => {
+                                    resolve({ open })
+                                };
+                            })
+                        } else if (result.close) {
+                            closePromise = new Promise(resolve => {
+                                dataChannel.onclose = (close) => {
+                                    resolve({ close })
+                                };
+                            })
+                            return { done: true, value: result };
+                        }
+                        return { done: result.close !== undefined, value: result };
+                    }
+                }
+            }
+        }];
     }
 
     static async joinInvite(config) {
@@ -104,12 +162,70 @@ export class CyberDeck {
             const peer = CyberDeck.createPeer(config);
             if (config.debug) console.log("cyberdeck: waiting for data channel");
             peer.ondatachannel = function (ev) {
+                const dataChannel = ev.channel;
                 if (dataChannel.binaryType) {
                     if (config.debug) console.log("cyberdeck: data channel established of type string");
                 } else {
                     if (config.debug) console.log("cyberdeck: data channel established of type " + dataChannel.binaryType);
                 }
-                resolve(ev.channel);
+                let errorPromise = new Promise(resolve => {
+                    dataChannel.onerror = (error) => {
+                        resolve({ error })
+                    };
+                })
+                let messagePromise = new Promise(resolve => {
+                    dataChannel.onmessage = (message) => {
+                        resolve({ message })
+                    };
+                })
+                let openPromise = new Promise(resolve => {
+                    dataChannel.onopen = (open) => {
+                        resolve({ open })
+                    };
+                })
+                let closePromise = new Promise(resolve => {
+                    dataChannel.onclose = (close) => {
+                        resolve({ close })
+                    };
+                })
+
+                resolve({
+                    send: dataChannel.send.bind(dataChannel),
+                    [Symbol.asyncIterator]() {
+                        return {
+                            async next() {
+                                let result = await Promise.race([errorPromise, messagePromise, openPromise, closePromise]);
+                                if (result.error) {
+                                    errorPromise = new Promise(resolve => {
+                                        dataChannel.onerror = (error) => {
+                                            resolve({ error })
+                                        };
+                                    })
+                                } else if (result.message) {
+                                    messagePromise = new Promise(resolve => {
+                                        dataChannel.onmessage = (message) => {
+                                            resolve({ message })
+                                        };
+                                    })
+                                } else if (result.open) {
+                                    openPromise = new Promise(resolve => {
+                                        dataChannel.onopen = (open) => {
+                                            resolve({ open })
+                                        };
+                                    })
+                                } else if (result.close) {
+                                    closePromise = new Promise(resolve => {
+                                        dataChannel.onclose = (close) => {
+                                            resolve({ close })
+                                        };
+                                    })
+                                    return { done: true, value: result };
+                                }
+                                return { done: result.close !== undefined, value: result };
+                            }
+                        }
+                    }
+                });
             };
         })
     }

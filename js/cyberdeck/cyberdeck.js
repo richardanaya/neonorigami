@@ -13,7 +13,7 @@ export class CyberDeck {
         const signaling = new SignalingChannel(config.gundb, config.local, config.remote);
         let configuration = { iceServers: [{ urls: 'stun:' + config.stun }] };
         if (config.xirsys) {
-            const userPass = xonfig.xirsys.split(":");
+            const userPass = config.xirsys.split(":");
             configuration = {
                 iceServers: [{
                     urls: ["stun:ws-turn2.xirsys.com"]

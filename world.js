@@ -22,8 +22,9 @@ export function getParameterByName(name, url = window.location.href) {
         let [local_uuid, remote_uuid, dataChannel] = CyberDeck.createInvite({
             gundb,
             stun,
-            xirsys
-        }, "my room");
+            xirsys,
+            name: "my room"
+        });
         let url = window.origin + window.location.pathname + `?gundb=${gundb}&stun=${stun}&join=gun&local=${remote_uuid}&remote=${local_uuid}`;
         if (xirsys) {
             url = window.origin + window.location.pathname + `?gundb=${gundb}&xirsys=${xirsys}&join=gun&local=${remote_uuid}&remote=${local_uuid}`;

@@ -71,13 +71,13 @@ export class CyberDeck {
         return pc;
     }
 
-    static createInvite(config, channelName) {
+    static createInvite(config) {
         if(!config.local){
             config.local = uuid();
             config.remote = uuid();
         }
         const peer = CyberDeck.createPeer(config);
-        const dataChannel = peer.createDataChannel(channelName);
+        const dataChannel = peer.createDataChannel(config.name);
         return [config.local, config.remote, dataChannel];
     }
 

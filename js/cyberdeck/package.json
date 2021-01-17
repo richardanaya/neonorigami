@@ -1,11 +1,23 @@
 {
   "name": "cyberdeck",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "A networking library for the virtual web",
-  "main": "index.js",
+  "main": "aframe-neonorigami.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
-  "license": "MIT"
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/richardanaya/neonorigami.git"
+  },
+  "keywords": [
+    "virtualreality",
+    "webrtc"
+  ],
+  "author": "Richard Anaya",
+  "license": "MIT OR Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/richardanaya/neonorigami/issues"
+  },
+  "homepage": "https://github.com/richardanaya/neonorigami#readme"
 }

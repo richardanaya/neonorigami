@@ -1,6 +1,6 @@
 # cyberdeck
 
-A library for ephemeral connections in the virtual web. This library is intented to use distributed storage technologies and webrtc. The basic idea is to give the the tools to get two browsers talking without the use of servers (or as few as possible).
+A library for ephemeral connections in the virtual web. This library is intented to use webrtc and distributed storage technologies for signalling. The basic idea is to give the the tools to get two browsers talking with as few servers as possible.
 
 Supported tech:
 * gunDB

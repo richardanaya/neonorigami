@@ -26,10 +26,9 @@ Here's an extremely minimal scenario using STUN only
         });
         let url = window.origin + window.location.pathname + `?gundb=${gundb}&stun=${stun}&join=gun&local=${remote_uuid}&remote=${local_uuid}`;
         document.body.innerHTML = "Send this url to the other person: " + url;
-        dataChannel.onopen = () => {
-            dataChannel.send("Hello World!");
-        };
-
+        for await ( const ev in dataChannel){
+            if(ev.open) dataChannel.send("Hello World!");
+        }
     } else {
         let dataChannel = await CyberDeck.joinInvite({
             gundb: "gunjs.herokuapp.com",
@@ -37,9 +36,9 @@ Here's an extremely minimal scenario using STUN only
             local: getQueryString("local"),
             remote: getQueryString("remote")
         });
-        dataChannel.onmessage = (event) => {
-            document.body.innerHTML = event.data;
-        };
+        for await ( const ev in dataChannel){
+            if(ev.message) dataChannel.send(ev.message.data);
+        }
     }
 })()
   

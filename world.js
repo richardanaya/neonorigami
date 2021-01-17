@@ -26,7 +26,8 @@ function log(msg){
             gundb,
             stun,
             xirsys,
-            name: "my room"
+            name: "my room",
+            debug: true,
         });
         let url = window.origin + window.location.pathname + `?gundb=${gundb}&stun=${stun}&join=gun&local=${remote_uuid}&remote=${local_uuid}`;
         if (xirsys) {
@@ -60,7 +61,8 @@ function log(msg){
             stun,
             xirsys,
             local,
-            remote
+            remote,
+            debug: true,
         });
         dataChannel.onerror = (error) => {
             log("Data Channel Error:", error);

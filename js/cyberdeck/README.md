@@ -35,7 +35,7 @@ Here's an extremely minimal scenario using STUN only
             gundb: "gunjs.herokuapp.com",
             stun: "stun.l.my_stun_server.com:19302",
             local: getQueryString("local"),
-            remote: getQueryString("rmeote")
+            remote: getQueryString("remote")
         });
         dataChannel.onmessage = (event) => {
             document.body.innerHTML = event.data;

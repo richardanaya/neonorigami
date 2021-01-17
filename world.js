@@ -17,6 +17,7 @@ function getParameterByName(name, url = window.location.href) {
 
 let gundb = getParameterByName("gundb");
 let stun = getParameterByName("stun");
+let xirsys = getParameterByName("xirsys");
 
 const gun = Gun({ peers: ['https://' + gundb + "/gun"] });
 
@@ -60,7 +61,11 @@ let local_uuid = uuid();
 let remote_uuid = uuid();
 
 if (isServer) {
-    document.body.innerHTML = "Send this url to the other person: <br>" + window.origin + window.location.pathname + `?gundb=${gundb}&stun=${stun}&join=gun&local=${remote_uuid}&remote=${local_uuid}`;
+    let url = window.origin + window.location.pathname + `?gundb=${gundb}&stun=${stun}&join=gun&local=${remote_uuid}&remote=${local_uuid}`;
+    if(xirsys){
+        url = window.origin + window.location.pathname + `?gundb=${gundb}&xirsys=${xirsys}&join=gun&local=${remote_uuid}&remote=${local_uuid}`;
+    }
+    document.body.innerHTML = "Send this url to the other person: <br>" + url;
 } else {
     const tmp = local_uuid;
     local_uuid = getParameterByName("local");
@@ -68,7 +73,26 @@ if (isServer) {
 }
 
 const signaling = new SignalingChannel(local_uuid, remote_uuid);
-const configuration = { iceServers: [{ urls: 'stun:' + stun }] };
+let configuration = { iceServers: [{ urls: 'stun:' + stun }] };
+if(xirsys){
+    const userPass = xirsys.split(":");
+    configuration = {
+        iceServers: [{
+            urls: [ "stun:ws-turn2.xirsys.com" ]
+         }, {
+            username: userPass[0],
+            credential: userPass[1],
+            urls: [
+                "turn:ws-turn2.xirsys.com:80?transport=udp",
+                "turn:ws-turn2.xirsys.com:3478?transport=udp",
+                "turn:ws-turn2.xirsys.com:80?transport=tcp",
+                "turn:ws-turn2.xirsys.com:3478?transport=tcp",
+                "turns:ws-turn2.xirsys.com:443?transport=tcp",
+                "turns:ws-turn2.xirsys.com:5349?transport=tcp"
+            ]
+         }]
+    }
+}
 const pc = new RTCPeerConnection(configuration);
 
 // Send any ice candidates to the other peer.

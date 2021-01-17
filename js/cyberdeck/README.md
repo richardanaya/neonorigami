@@ -34,8 +34,8 @@ Here's an extremely minimal scenario using STUN only
         let dataChannel = await CyberDeck.joinInvite({
             gundb: "gunjs.herokuapp.com",
             stun: "stun.l.my_stun_server.com:19302",
-            local: getParameterByName("local"),
-            remote: getParameterByName("rmeote")
+            local: getQueryString("local"),
+            remote: getQueryString("rmeote")
         });
         dataChannel.onmessage = (event) => {
             document.body.innerHTML = event.data;
@@ -43,13 +43,11 @@ Here's an extremely minimal scenario using STUN only
     }
 })()
   
-export function getParameterByName(name, url = window.location.href) {
-    name = name.replace(/[\[\]]/g, '\\$&');
-    var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
-        results = regex.exec(url);
-    if (!results) return null;
-    if (!results[2]) return '';
-    return decodeURIComponent(results[2].replace(/\+/g, ' '));
-}
+var getQueryString = function (field, url) {
+	var href = url ? url : window.location.href;
+	var reg = new RegExp('[?&]' + field + '=([^&#]*)', 'i');
+	var string = reg.exec(href);
+	return string ? string[1] : null;
+};
 </script>
 ```

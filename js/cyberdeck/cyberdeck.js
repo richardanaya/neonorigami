@@ -41,7 +41,6 @@ export class CyberDeck {
             try {
                 await pc.setLocalDescription(await pc.createOffer());
                 signaling.send({ desc: JSON.parse(JSON.stringify(pc.localDescription)) });
-                console.log("offer sent");
             } catch (err) {
                 console.error(err);
             }

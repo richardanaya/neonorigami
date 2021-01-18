@@ -2418,7 +2418,11 @@ var CyberDeck = (function () {
 
 	    addListener(listener) {
 	        this.onmessage = listener;
-	        this.gun.get(this.local_uuid).on(d => {
+	        if(this.listenerHandle){
+	            this.listenerHandle.off();
+	        }
+	        this.listenerHandle = this.gun.get(this.local_uuid);
+	        this.listenerHandle.on(d => {
 	            const data = JSON.parse(d.content);
 	            if (this.onmessage) {
 	                while (this.lastMessageIndex < data.length - 1) {
@@ -2428,6 +2432,15 @@ var CyberDeck = (function () {
 	                }
 	            }
 	        });
+	    }
+
+	    destroy() {
+	        if(this.listenerHandle){
+	            this.listenerHandle.off();
+	        }
+	        this.listenerHandle = undefined;
+	        this.gun.off();
+	        this.gun = undefined;
 	    }
 	}
 
@@ -2488,6 +2501,7 @@ var CyberDeck = (function () {
 	            if (config.debug) console.log("cyberdeck: peer connection state `" + pc.iceConnectionState + "`");
 	        };
 
+	        if (config.debug) console.log("cyberdeck: listening for offer");
 	        signaling.addListener(async ({ desc, candidate }) => {
 	            try {
 	                if (desc) {
@@ -2511,7 +2525,7 @@ var CyberDeck = (function () {
 	                console.error(err);
 	            }
 	        });
-	        return pc;
+	        return [pc,signaling];
 	    }
 
 	    static createInvite(config) {
@@ -2519,7 +2533,7 @@ var CyberDeck = (function () {
 	            config.local = uuid();
 	            config.remote = uuid();
 	        }
-	        const peer = CyberDeck.createPeer(config);
+	        const [peer,signaling] = CyberDeck.createPeer(config);
 	        const dataChannel = peer.createDataChannel(config.name);
 	        if (config.data_channel_type) {
 	            if (config.debug) console.log("cyberdeck: using " + config.data_channel_type + " data channel type");
@@ -2540,6 +2554,8 @@ var CyberDeck = (function () {
 	        });
 	        let openPromise = new Promise(resolve => {
 	            dataChannel.onopen = (open) => {
+	                signaling.destroy();
+	                if (config.debug) console.log("cyberdeck: connection established, so signalling will stop");
 	                resolve({ open });
 	            };
 	        });
@@ -2590,7 +2606,7 @@ var CyberDeck = (function () {
 
 	    static async joinInvite(config) {
 	        return new Promise(resolve => {
-	            const peer = CyberDeck.createPeer(config);
+	            const [peer,signaling] = CyberDeck.createPeer(config);
 	            if (config.debug) console.log("cyberdeck: waiting for data channel");
 	            peer.ondatachannel = function (ev) {
 	                const dataChannel = ev.channel;
@@ -2611,6 +2627,8 @@ var CyberDeck = (function () {
 	                });
 	                let openPromise = new Promise(resolve => {
 	                    dataChannel.onopen = (open) => {
+	                        signaling.destroy();
+	                        if (config.debug) console.log("cyberdeck: connection established, so signalling will stop");
 	                        resolve({ open });
 	                    };
 	                });

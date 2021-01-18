@@ -21,7 +21,11 @@ export class SignalingChannel {
 
     addListener(listener) {
         this.onmessage = listener;
-        this.gun.get(this.local_uuid).on(d => {
+        if(this.listenerHandle){
+            this.listenerHandle.off()
+        }
+        this.listenerHandle = this.gun.get(this.local_uuid)
+        this.listenerHandle.on(d => {
             const data = JSON.parse(d.content)
             if (this.onmessage) {
                 while (this.lastMessageIndex < data.length - 1) {
@@ -31,5 +35,14 @@ export class SignalingChannel {
                 }
             }
         });
+    }
+
+    destroy() {
+        if(this.listenerHandle){
+            this.listenerHandle.off()
+        }
+        this.listenerHandle = undefined;
+        this.gun.off();
+        this.gun = undefined;
     }
 }

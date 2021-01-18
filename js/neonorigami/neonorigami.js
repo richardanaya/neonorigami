@@ -1,5 +1,3 @@
-
-(function(l, r) { if (l.getElementById('livereloadscript')) return; r = l.createElement('script'); r.async = 1; r.src = '//' + (window.location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1'; r.id = 'livereloadscript'; l.getElementsByTagName('head')[0].appendChild(r) })(window.document);
 (function () {
 	'use strict';
 
@@ -78379,7 +78377,11 @@
 
 	    addListener(listener) {
 	        this.onmessage = listener;
-	        this.gun.get(this.local_uuid).on(d => {
+	        if(this.listenerHandle){
+	            this.listenerHandle.off();
+	        }
+	        this.listenerHandle = this.gun.get(this.local_uuid);
+	        this.listenerHandle.on(d => {
 	            const data = JSON.parse(d.content);
 	            if (this.onmessage) {
 	                while (this.lastMessageIndex < data.length - 1) {
@@ -78389,6 +78391,15 @@
 	                }
 	            }
 	        });
+	    }
+
+	    destroy() {
+	        if(this.listenerHandle){
+	            this.listenerHandle.off();
+	        }
+	        this.listenerHandle = undefined;
+	        this.gun.off();
+	        this.gun = undefined;
 	    }
 	}
 
@@ -78449,6 +78460,7 @@
 	            if (config.debug) console.log("cyberdeck: peer connection state `" + pc.iceConnectionState + "`");
 	        };
 
+	        if (config.debug) console.log("cyberdeck: listening for offer");
 	        signaling.addListener(async ({ desc, candidate }) => {
 	            try {
 	                if (desc) {
@@ -78472,7 +78484,7 @@
 	                console.error(err);
 	            }
 	        });
-	        return pc;
+	        return [pc,signaling];
 	    }
 
 	    static createInvite(config) {
@@ -78480,7 +78492,7 @@
 	            config.local = uuid();
 	            config.remote = uuid();
 	        }
-	        const peer = CyberDeck.createPeer(config);
+	        const [peer,signaling] = CyberDeck.createPeer(config);
 	        const dataChannel = peer.createDataChannel(config.name);
 	        if (config.data_channel_type) {
 	            if (config.debug) console.log("cyberdeck: using " + config.data_channel_type + " data channel type");
@@ -78501,6 +78513,8 @@
 	        });
 	        let openPromise = new Promise(resolve => {
 	            dataChannel.onopen = (open) => {
+	                signaling.destroy();
+	                if (config.debug) console.log("cyberdeck: connection established, so signalling will stop");
 	                resolve({ open });
 	            };
 	        });
@@ -78551,7 +78565,7 @@
 
 	    static async joinInvite(config) {
 	        return new Promise(resolve => {
-	            const peer = CyberDeck.createPeer(config);
+	            const [peer,signaling] = CyberDeck.createPeer(config);
 	            if (config.debug) console.log("cyberdeck: waiting for data channel");
 	            peer.ondatachannel = function (ev) {
 	                const dataChannel = ev.channel;
@@ -78572,6 +78586,8 @@
 	                });
 	                let openPromise = new Promise(resolve => {
 	                    dataChannel.onopen = (open) => {
+	                        signaling.destroy();
+	                        if (config.debug) console.log("cyberdeck: connection established, so signalling will stop");
 	                        resolve({ open });
 	                    };
 	                });

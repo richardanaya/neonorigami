@@ -57,6 +57,7 @@ export default class CyberDeck {
             if (config.debug) console.log("cyberdeck: peer connection state `" + pc.iceConnectionState + "`");
         }
 
+        if (config.debug) console.log("cyberdeck: listening for offer");
         signaling.addListener(async ({ desc, candidate }) => {
             try {
                 if (desc) {
@@ -80,7 +81,7 @@ export default class CyberDeck {
                 console.error(err);
             }
         });
-        return pc;
+        return [pc,signaling];
     }
 
     static createInvite(config) {
@@ -88,7 +89,7 @@ export default class CyberDeck {
             config.local = uuid();
             config.remote = uuid();
         }
-        const peer = CyberDeck.createPeer(config);
+        const [peer,signaling] = CyberDeck.createPeer(config);
         const dataChannel = peer.createDataChannel(config.name);
         if (config.data_channel_type) {
             if (config.debug) console.log("cyberdeck: using " + config.data_channel_type + " data channel type");
@@ -109,6 +110,8 @@ export default class CyberDeck {
         })
         let openPromise = new Promise(resolve => {
             dataChannel.onopen = (open) => {
+                signaling.destroy();
+                if (config.debug) console.log("cyberdeck: connection established, so signalling will stop");
                 resolve({ open })
             };
         })
@@ -159,7 +162,7 @@ export default class CyberDeck {
 
     static async joinInvite(config) {
         return new Promise(resolve => {
-            const peer = CyberDeck.createPeer(config);
+            const [peer,signaling] = CyberDeck.createPeer(config);
             if (config.debug) console.log("cyberdeck: waiting for data channel");
             peer.ondatachannel = function (ev) {
                 const dataChannel = ev.channel;
@@ -180,6 +183,8 @@ export default class CyberDeck {
                 })
                 let openPromise = new Promise(resolve => {
                     dataChannel.onopen = (open) => {
+                        signaling.destroy();
+                        if (config.debug) console.log("cyberdeck: connection established, so signalling will stop");
                         resolve({ open })
                     };
                 })

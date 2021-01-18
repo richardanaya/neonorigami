@@ -23,7 +23,8 @@
   "dependencies": {
     "aframe": "^1.1.0",
     "cyberdeck": "file:../cyberdeck",
-    "gun": "^0.2020.520"
+    "gun": "^0.2020.520",
+    "lit-element": "^2.4.0"
   },
   "devDependencies": {
     "@rollup/plugin-node-resolve": "^11.0.1",

@@ -1,6 +1,6 @@
 {
   "name": "cyberdeck",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "description": "A networking library for the virtual web",
   "main": "src/index.js",
   "scripts": {

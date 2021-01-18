@@ -78358,7 +78358,10 @@
 
 	class SignalingChannel {
 	    constructor(gundb_origin, local_uuid, remote_uuid) {
-	        this.gun = gun({ peers: ['https://' + gundb_origin + "/gun"] });
+	        this.gun = gun({
+	            peers: ['https://' + gundb_origin + "/gun"] ,
+	            retry: -1,
+	        });
 	        this.lastMessageIndex = -1;
 	        this.outgoing = {};
 	        this.local_uuid = local_uuid;
@@ -78398,8 +78401,19 @@
 	            this.listenerHandle.off();
 	        }
 	        this.listenerHandle = undefined;
-	        this.gun.off();
-	        this.gun = undefined;
+	        var mesh = this.gun.back('opt.mesh');
+	        var peers = this.gun.back('opt.peers');
+	        Object.keys(peers).forEach(id => {
+	            mesh.bye(id);
+	        });
+	        window.setTimeout(() => {
+	            var mesh = this.gun.back('opt.mesh');
+	            var peers = this.gun.back('opt.peers');
+	            Object.keys(peers).forEach(id => {
+	                mesh.bye(id);
+	            }); 
+	            this.gun = undefined;
+	        }, 5000);
 	    }
 	}
 

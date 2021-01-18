@@ -78359,7 +78359,7 @@
 	class SignalingChannel {
 	    constructor(gundb_origin, local_uuid, remote_uuid) {
 	        this.gun = gun({
-	            peers: ['https://' + gundb_origin + "/gun"] ,
+	            peers: ['https://' + gundb_origin + "/gun"],
 	            retry: -1,
 	        });
 	        this.lastMessageIndex = -1;
@@ -78380,7 +78380,7 @@
 
 	    addListener(listener) {
 	        this.onmessage = listener;
-	        if(this.listenerHandle){
+	        if (this.listenerHandle) {
 	            this.listenerHandle.off();
 	        }
 	        this.listenerHandle = this.gun.get(this.local_uuid);
@@ -78397,10 +78397,12 @@
 	    }
 
 	    destroy() {
-	        if(this.listenerHandle){
+	        if (this.listenerHandle) {
 	            this.listenerHandle.off();
 	        }
 	        this.listenerHandle = undefined;
+	        // HACK: shutting down Gun's connection to a websocket currently has bugs in it
+	        // I have to say goodbye twice
 	        var mesh = this.gun.back('opt.mesh');
 	        var peers = this.gun.back('opt.peers');
 	        Object.keys(peers).forEach(id => {
@@ -78411,7 +78413,7 @@
 	            var peers = this.gun.back('opt.peers');
 	            Object.keys(peers).forEach(id => {
 	                mesh.bye(id);
-	            }); 
+	            });
 	            this.gun = undefined;
 	        }, 5000);
 	    }

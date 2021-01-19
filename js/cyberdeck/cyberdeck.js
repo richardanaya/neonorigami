@@ -2518,7 +2518,7 @@ var CyberDeck = (function () {
 	                this.sendDirty = false;
 	                await this.contract.methods["set"](this.remote_uuid, JSON.stringify(this.outgoing)).send({ from: this.accounts[0] });
 	            }
-	        },5000);
+	        }, 5000);
 	    }
 
 	    async send(data) {

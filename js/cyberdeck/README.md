@@ -6,6 +6,7 @@ Supported tech:
 * gunDB
 * STUN
 * xirsys
+* ethereum
 
 ## How to Use
 

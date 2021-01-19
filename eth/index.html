@@ -1,0 +1,65 @@
+<script type="text/javascript"
+    src="https://cdn.jsdelivr.net/gh/ethereum/web3.js@1.0.0-beta.34/dist/web3.min.js"></script>
+<script>
+    (async function () {
+        if(window.ethereum) {
+            await ethereum.enable();
+        }
+        const web3 = new Web3(window.web3.currentProvider);
+        let accounts = await web3.eth.getAccounts();
+        let abi = [
+            {
+                "inputs": [
+                    {
+                        "internalType": "string",
+                        "name": "_key",
+                        "type": "string"
+                    },
+                    {
+                        "internalType": "string",
+                        "name": "_value",
+                        "type": "string"
+                    }
+                ],
+                "name": "set",
+                "outputs": [],
+                "stateMutability": "nonpayable",
+                "type": "function"
+            },
+            {
+                "inputs": [
+                    {
+                        "internalType": "address",
+                        "name": "_account",
+                        "type": "address"
+                    },
+                    {
+                        "internalType": "string",
+                        "name": "_key",
+                        "type": "string"
+                    }
+                ],
+                "name": "get",
+                "outputs": [
+                    {
+                        "internalType": "string",
+                        "name": "",
+                        "type": "string"
+                    }
+                ],
+                "stateMutability": "view",
+                "type": "function"
+            }
+        ];
+        let c = new web3.eth.Contract(abi,"0x55C1878632a55d3BBcC0a1fa69De725c2fB493DF");
+        result = await c.methods["get"]("0x8C29B33c168098f3aa19c666c07e14E000b2Fc65","test").call({from:accounts[0]})
+        console.log(result);
+        /*
+        let result = await c.methods["get"]("0x8C29B33c168098f3aa19c666c07e14E000b2Fc65","test").send({from:accounts[0]})
+        result = await c.methods["get"]("0x8C29B33c168098f3aa19c666c07e14E000b2Fc65","test").call({from:accounts[0]})
+        console.log(result)
+        await c.methods["set"]("test","blah").send({from:accounts[0]})
+        result = await c.methods["get"]("0x8C29B33c168098f3aa19c666c07e14E000b2Fc65","test").call({from:accounts[0]})
+        console.log(result);*/
+    })()
+</script>

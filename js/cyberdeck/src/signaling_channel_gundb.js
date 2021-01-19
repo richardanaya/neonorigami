@@ -1,6 +1,6 @@
 import Gun from 'gun/gun'
 
-export class SignalingChannel {
+export class SignalingChannelGun {
     constructor(gundb_origin, local_uuid, remote_uuid) {
         this.gun = Gun({
             peers: ['https://' + gundb_origin + "/gun"],
@@ -13,7 +13,7 @@ export class SignalingChannel {
         this.onmessage = undefined;
     }
 
-    send(data) {
+    async send(data) {
         if (this.outgoing.length === undefined) {
             this.outgoing.length = 0;
         }

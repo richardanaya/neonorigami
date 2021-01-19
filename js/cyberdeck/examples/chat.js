@@ -4,13 +4,21 @@ async function run() {
             gundb: queryString("gundb"),
             stun: queryString("stun"),
             xirsys: queryString("xirsys"),
+            eth_addr: queryString("eth_addr"),
             name: "my room",
             debug: true,
         });
-        let url = window.origin + window.location.pathname + `?gundb=${queryString("gundb")}&stun=${queryString("stun")}&join=gun&local=${remote_uuid}&remote=${local_uuid}`;
-        if (queryString("xirsys")) {
-            url = window.origin + window.location.pathname + `?gundb=${queryString("gundb")}&xirsys=${queryString("xirsys")}&join=gun&local=${remote_uuid}&remote=${local_uuid}`;
+        let url = window.origin + window.location.pathname + `?gundb=${queryString("gundb")}`;
+        if (queryString("eth_addr")) {
+            url = window.origin + window.location.pathname + `?eth_addr=${queryString("eth_addr")}`;
         }
+
+        if (queryString("xirsys")) {
+            url += `&xirsys=${queryString("xirsys")}`;
+        }  else {
+            url += `&stun=${queryString("stun")}`;
+        }
+        url += `&local=${remote_uuid}&remote=${local_uuid}&join=true`
 
         document.querySelector("button").addEventListener("click", () => {
             log("Server: " + document.querySelector("input").value)
@@ -35,6 +43,7 @@ async function run() {
             gundb: queryString("gundb"),
             stun: queryString("stun"),
             xirsys: queryString("xirsys"),
+            eth_addr: queryString("eth_addr"),
             local: queryString("local"),
             remote: queryString("remote"),
             debug: true,

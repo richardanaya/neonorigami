@@ -1,4 +1,5 @@
-import { SignalingChannel } from "./signaling_channel_gundb.js"
+import { SignalingChannelGun } from "./signaling_channel_gundb.js"
+import { SignalingChannelEthereum } from "./signaling_channel_ethereum.js"
 
 function uuid() {
     function _p8(s) {
@@ -10,7 +11,13 @@ function uuid() {
 
 export default class CyberDeck {
     static createPeer(config) {
-        const signaling = new SignalingChannel(config.gundb, config.local, config.remote);
+        let signaling;
+        if(config.gundb){
+            signaling = new SignalingChannelGun(config.gundb, config.local, config.remote);
+        } else if(config.eth_addr){
+            signaling = new SignalingChannelEthereum(config.eth_addr, config.local, config.remote);
+            // "0x8C29B33c168098f3aa19c666c07e14E000b2Fc65"
+        }
 
         let peer_configuration;
         if (config.xirsys) {
@@ -40,14 +47,14 @@ export default class CyberDeck {
 
         pc.onicecandidate = ({ candidate }) => {
             if (config.debug) console.log("cyberdeck: identified ice candidate, sending to peer");
-            signaling.send({ candidate: JSON.parse(JSON.stringify(candidate)) });
+            signaling.send({ candidate: JSON.parse(JSON.stringify(candidate)) }).catch(error => console.error(error));
         }
 
         pc.onnegotiationneeded = async () => {
             try {
                 await pc.setLocalDescription(await pc.createOffer());
                 if (config.debug) console.log("cyberdeck: sending offer");
-                signaling.send({ desc: JSON.parse(JSON.stringify(pc.localDescription)) });
+                await signaling.send({ desc: JSON.parse(JSON.stringify(pc.localDescription)) });
             } catch (err) {
                 console.error(err);
             }
@@ -66,7 +73,7 @@ export default class CyberDeck {
                         await pc.setRemoteDescription(desc);
                         await pc.setLocalDescription(await pc.createAnswer());
                         if (config.debug) console.log("cyberdeck: sending answer");
-                        signaling.send({ desc: JSON.parse(JSON.stringify(pc.localDescription)) });
+                        await signaling.send({ desc: JSON.parse(JSON.stringify(pc.localDescription)) });
                     } else if (desc.type === 'answer') {
                         if (config.debug) console.log("cyberdeck: answer received");
                         await pc.setRemoteDescription(new RTCSessionDescription(desc));

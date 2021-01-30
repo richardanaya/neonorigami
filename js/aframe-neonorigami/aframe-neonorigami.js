@@ -3,7 +3,7 @@
 (function () {
   'use strict';
 
-  AFRAME.registerComponent('neon-origami-landscape', {
+  AFRAME.registerComponent('neon-origami-environment', {
       schema: {
           "sky-color": {type: 'color', default: '#87CEEB'}
       },
@@ -22,10 +22,7 @@
               scene.background = new THREE.Color( this.data["sky-color"] );
               this.didChange = false;
           }
-      },
-      remove: function () {},
-      pause: function () {},
-      play: function () {}
+      }
     });
 
 }());

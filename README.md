@@ -45,3 +45,22 @@ Supported Devices:
   </body>
 </html>
 ```
+
+# Developing Neon Origami
+
+```
+sudo npm install -g yarn
+sudo yarn global install rollup
+make dev
+```
+
+# Developing Components
+
+If you just want to work on Neon Origami components for A-Frame
+
+```
+sudo npm install -g yarn
+sudo yarn global install rollup
+make dev-components
+# open http://localhost:8081/
+```

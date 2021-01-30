@@ -39,6 +39,7 @@ async function run() {
             }
         }
     } else {
+        log("waiting for connection information from the ethereum blockchain ...")
         const dataChannel = await CyberDeck.joinInvite({
             gundb: queryString("gundb"),
             stun: queryString("stun"),

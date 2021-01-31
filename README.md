@@ -1,6 +1,6 @@
-# ＮＥＯＮ ＯＲＩＧＡＭＩ
+# Neon Origami
 
-An open-source virtual world platform for the future.
+An open-source distributed virtual world platform.
 
 # How do I connect to the virtual web?
 

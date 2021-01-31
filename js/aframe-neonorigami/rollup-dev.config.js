@@ -2,6 +2,7 @@ import resolve from 'rollup-plugin-node-resolve';
 import commonjs from 'rollup-plugin-commonjs';
 import serve from 'rollup-plugin-serve'
 import livereload from 'rollup-plugin-livereload'
+import typescript from 'rollup-plugin-typescript';
 
 export default {
   input: 'src/main.js',
@@ -15,6 +16,7 @@ export default {
     name: 'AFrameNeonOrigami'
   }],
   plugins: [
+    typescript(),
     resolve(),
     commonjs(),
     serve({

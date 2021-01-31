@@ -1,4 +1,5 @@
 import {ProceduralTerrain} from "./terrain"
+import {createSky} from "./sky"
 
 function generateGrid(pointWidth, heightCalc, material) {
     const geometry = new THREE.Geometry();
@@ -38,7 +39,7 @@ function getEnvScene() {
 
     // TODO: make lights that match environment for environment maps
 
-    /*const geometry = new THREE.BoxGeometry();
+    const geometry = new THREE.BoxGeometry();
     //geometry.deleteAttribute( 'uv' );
 
     const mainLight = new THREE.PointLight( 0xffffff, 50, 0, 2 );
@@ -47,22 +48,10 @@ function getEnvScene() {
     const lightMaterial = new THREE.MeshLambertMaterial( { color: 0x000000, emissive: 0xffffff, emissiveIntensity: 10 } );
 
     const light1 = new THREE.Mesh( geometry, lightMaterial );
-    light1.material.color.setHex( 0xff0000 );
+    light1.material.color.setHex( 0xffffff );
     light1.position.set( - 5, 2, 0 );
     light1.scale.set( 0.1, 1, 1 );
     envScene.add( light1 );
-
-    const light2 = new THREE.Mesh( geometry, lightMaterial.clone() );
-    light2.material.color.setHex( 0x00ff00 );
-    light2.position.set( 0, 5, 0 );
-    light2.scale.set( 1, 0.1, 1 );
-    envScene.add( light2 );
-
-    const light3 = new THREE.Mesh( geometry, lightMaterial.clone() );
-    light3.material.color.setHex( 0x0000ff );
-    light3.position.set( 2, 1, 5 );
-    light3.scale.set( 1.5, 2, 0.1 );
-    envScene.add( light3 );*/
 
     return envScene;
 
@@ -79,13 +68,15 @@ AFRAME.registerComponent('neon-origami-environment', {
         const renderer = this.el.closest("a-scene").renderer;
         renderer.physicallyCorrectLights = true;
         renderer.toneMapping = THREE.ACESFilmicToneMapping;
-        const scene = this.el.closest("a-scene").object3D;
+        renderer.shadowMapEnabled = true;
+        this.scene = this.el.closest("a-scene").object3D;
         
 
         // 0. Let's generate environment map from a scene with lights to get cool PBR effects
         const pmremGenerator = new THREE.PMREMGenerator( renderer );
         this.generatedCubeRenderTarget = pmremGenerator.fromScene( getEnvScene(), 0.04 );
-
+        this.scene.environment = this.generatedCubeRenderTarget.texture;
+        this.scene.add( createSky());
         // 100 points width and height centered around 0,0
         const pointWidth = 200;
         
@@ -107,7 +98,7 @@ AFRAME.registerComponent('neon-origami-environment', {
             roughnessMap: loader.load('Ground027_2K_Roughness.jpg'),
         })
       
-        scene.add(generateGrid(pointWidth, (x, y) => {
+        this.scene.add(generateGrid(pointWidth, (x, y) => {
             // height from noise, ranged 0.0-1.0
             let heightFromNoise = noise[x][y]/20;
             // get positions relative to center
@@ -147,7 +138,7 @@ AFRAME.registerComponent('neon-origami-environment', {
                 }
             `
         })
-        scene.add(generateGrid(pointWidth, () => 0, this.waterShader));
+        this.scene.add(generateGrid(pointWidth, () => 0, this.waterShader));
     },
     update: function (oldData) {
         if (oldData["sky-color"] != this.data["sky-color"]) {
@@ -157,12 +148,10 @@ AFRAME.registerComponent('neon-origami-environment', {
     tick: function () {
         if (this.didChange) {
             // get the three js scene
-            const scene = this.el.closest("a-scene").object3D;
-            scene.background = new THREE.Color(this.data["sky-color"]);
+            this.scene.background = new THREE.Color(this.data["sky-color"]);
             this.didChange = false;
         }
        // this.waterShader.uniforms.time.value = new Date().getTime();
-        this.landShader.envMap = this.generatedCubeRenderTarget.texture;
         this.landShader.needsUpdate = true;
     }
 });

@@ -1,8 +1,8 @@
-import {heightMapGrid} from "./geometry"
+import { heightMapGrid } from "./geometry"
 
 export class Sea {
     private waterShader;
-    constructor(private scene, pointWidth){
+    constructor(private scene, pointWidth) {
         this.waterShader = new THREE.ShaderMaterial({
             transparent: true,
 
@@ -28,9 +28,5 @@ export class Sea {
             `
         })
         this.scene.add(new THREE.Mesh(heightMapGrid(pointWidth, () => 0), this.waterShader));
-     }
-
-    public update(){
-        this.waterShader.needsUpdate = true;
     }
 }

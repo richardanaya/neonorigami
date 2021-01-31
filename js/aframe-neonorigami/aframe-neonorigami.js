@@ -25,8 +25,6 @@
             // Make every object use same environment map
             scene.environment = generatedCubeRenderTarget.texture;
         }
-        Lighting.prototype.update = function () {
-        };
         return Lighting;
     }());
 
@@ -45,9 +43,6 @@
             });
             this.scene.add(new THREE.Mesh(new THREE.BoxGeometry(1000, 1000, 1000), this.skyShader));
         }
-        Sky.prototype.update = function () {
-            this.skyShader.needsUpdate = true;
-        };
         return Sky;
     }());
 
@@ -844,9 +839,6 @@
                 return height;
             }), this.landShader));
         }
-        Land.prototype.update = function () {
-            this.landShader.needsUpdate = true;
-        };
         return Land;
     }());
 
@@ -864,9 +856,6 @@
             });
             this.scene.add(new THREE.Mesh(heightMapGrid(pointWidth, function () { return 0; }), this.waterShader));
         }
-        Sea.prototype.update = function () {
-            this.waterShader.needsUpdate = true;
-        };
         return Sea;
     }());
 
@@ -903,10 +892,6 @@
                 this.scene.background = new THREE.Color(this.data["sky-color"]);
                 this.didChange = false;
             }
-
-            this.sky.update();
-            this.land.update();
-            this.sea.update();
         }
     });
 

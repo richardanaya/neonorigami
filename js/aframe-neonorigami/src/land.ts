@@ -36,8 +36,4 @@ export class Land {
             return height;
         }), this.landShader));
     }
-
-    public update(){
-        this.landShader.needsUpdate = true;
-    }
 }

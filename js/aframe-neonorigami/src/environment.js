@@ -36,9 +36,5 @@ AFRAME.registerComponent('neon-origami-environment', {
             this.scene.background = new THREE.Color(this.data["sky-color"]);
             this.didChange = false;
         }
-
-        this.sky.update();
-        this.land.update();
-        this.sea.update();
     }
 });

@@ -14,6 +14,7 @@ AFRAME.registerComponent('neon-origami-environment', {
         const renderer = this.el.closest("a-scene").renderer;
         renderer.physicallyCorrectLights = true;
         renderer.toneMapping = THREE.ACESFilmicToneMapping;
+        renderer.toneMappingExposure = 1.2;
         renderer.shadowMapEnabled = true;
         this.scene = this.el.closest("a-scene").object3D;
 

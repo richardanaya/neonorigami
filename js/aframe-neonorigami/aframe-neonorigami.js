@@ -775,7 +775,7 @@
         }
     };
 
-    function heightMapGrid(pointWidth, heightCalc) {
+    function heightMapGrid(pointWidth, heightCalc, vertexColorCalc) {
         const geometry = new THREE.Geometry();
         for (let y = 0; y < pointWidth; y++) {
             for (let x = 0; x < pointWidth; x++) {
@@ -787,17 +787,38 @@
             }
         }
 
+        geometry.faceVertexUvs[1] = [];
         for (let y = 0; y < pointWidth - 1; y++) {
             for (let x = 0; x < pointWidth - 1; x++) {
                 let curPoint = y * pointWidth + x;
+                const top = new THREE.Face3(curPoint, curPoint + pointWidth, curPoint + 1);
+                const bot = new THREE.Face3(curPoint + 1, curPoint + pointWidth, curPoint + pointWidth + 1);
                 geometry.faces.push(
-                    new THREE.Face3(curPoint, curPoint + pointWidth, curPoint + 1,),
-                    new THREE.Face3(curPoint + 1, curPoint + pointWidth, curPoint + pointWidth + 1),
+                    top,
+                    bot,
                 );
                 geometry.faceVertexUvs[0].push(
                     [new THREE.Vector2(0, 0), new THREE.Vector2(0, 1), new THREE.Vector2(1, 0)],
                     [new THREE.Vector2(1, 0), new THREE.Vector2(0, 1), new THREE.Vector2(1, 1)],
                 );
+                let dx = 1/(pointWidth - 1);
+                let dy = 1/(pointWidth - 1);
+                geometry.faceVertexUvs[1].push(
+                    [new THREE.Vector2(x*dx, y*dy), new THREE.Vector2(x*dx, y*dy+dy), new THREE.Vector2(x*dx+dx, y*dy)],
+                    [new THREE.Vector2(x*dx+dx, y*dy), new THREE.Vector2(x*dx, y*dy+dy), new THREE.Vector2(x*dx+dx, y*dy+dy)],
+                );
+                if(vertexColorCalc){
+                    top.vertexColors.push(
+                        vertexColorCalc(x,y),
+                        vertexColorCalc(x,y+1),
+                        vertexColorCalc(x+1,y),
+                    );
+                    bot.vertexColors.push(
+                        vertexColorCalc(x+1,y),
+                        vertexColorCalc(x,y+1),
+                        vertexColorCalc(x+1,y+1),
+                    );
+                }
             }
         }
 
@@ -820,20 +841,36 @@
             var noise = map.getHeightMap();
             var loader = new THREE.TextureLoader();
             this.landShader = new THREE.MeshStandardMaterial({
+                transparent: true,
+                map: loader.load('Ground037_2K_Color.jpg'),
+                alphaMap: loader.load('terrain.jpg'),
+                normalMap: loader.load('Ground037_2K_Normal.jpg'),
+                aoMap: loader.load('Ground037_2K_AmbientOcclusion.jpg'),
+                roughnessMap: loader.load('Ground037_2K_Roughness.jpg'),
+                vertexColors: THREE.VertexColors,
+            });
+            // hack our material so it uses UV2
+            this.landShader.onBeforeCompile = function (shader) {
+                shader.fragmentShader = shader.fragmentShader.replace('#include <alphamap_fragment>', "diffuseColor.a *= texture2D( alphaMap, vUv2 ).g;");
+            };
+            this.baseShader = new THREE.MeshStandardMaterial({
                 map: loader.load('Ground027_2K_Color.jpg'),
                 normalMap: loader.load('Ground027_2K_Normal.jpg'),
                 aoMap: loader.load('Ground027_2K_AmbientOcclusion.jpg'),
                 roughnessMap: loader.load('Ground027_2K_Roughness.jpg'),
+                vertexColors: THREE.VertexColors,
             });
             var min = 100000;
             var max = -100000;
+            var color = [];
             for (var x = 0; x < pointWidth; x++) {
                 for (var y = 0; y < pointWidth; y++) {
                     min = Math.min(min, noise[x][y]);
                     max = Math.max(max, noise[x][y]);
+                    color[y * pointWidth + x] = Math.random() * .2 + .8;
                 }
             }
-            this.scene.add(new THREE.Mesh(heightMapGrid(pointWidth, function (x, y) {
+            var geo = heightMapGrid(pointWidth, function (x, y) {
                 // height from noise, ranged 0.0-1.0
                 var heightFromNoise = (noise[x][y] - min) / (max - min);
                 // get positions relative to center
@@ -846,7 +883,15 @@
                 // lets center our height scale around zero so we have some above and below water
                 var height = heightFromNoise * scale - 5;
                 return height;
-            }), this.landShader));
+            }, function (x, y) {
+                return new THREE.Color(color[y * pointWidth + x], color[y * pointWidth + x], color[y * pointWidth + x]);
+            });
+            var top = new THREE.Mesh(geo, this.landShader);
+            var bottom = new THREE.Mesh(geo, this.baseShader);
+            top.position.y = .01;
+            this.scene.add(top);
+            this.scene.add(bottom);
+            //this.scene.add(geo, this.landShader);
         }
         return Land;
     }());
@@ -879,6 +924,7 @@
             const renderer = this.el.closest("a-scene").renderer;
             renderer.physicallyCorrectLights = true;
             renderer.toneMapping = THREE.ACESFilmicToneMapping;
+            renderer.toneMappingExposure = 1.2;
             renderer.shadowMapEnabled = true;
             this.scene = this.el.closest("a-scene").object3D;
 

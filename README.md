@@ -2,6 +2,12 @@
 
 An open-source distributed virtual world platform.
 
+Also a collection of high quality A-Frame components you can use for your own work:
+
+* Physically based environment
+
+See [demo](https://neonorigami.com/js/aframe-neonorigami/dist/index.html)
+
 # How do I connect to the virtual web?
 
 ## Requirements

@@ -1,5 +1,3 @@
-
-(function(l, r) { if (l.getElementById('livereloadscript')) return; r = l.createElement('script'); r.async = 1; r.src = '//' + (window.location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1'; r.id = 'livereloadscript'; l.getElementsByTagName('head')[0].appendChild(r) })(window.document);
 (function () {
 	'use strict';
 
@@ -3725,7 +3723,7 @@
 
 	    if (glyph) {
 	      //move pen forward
-	      var xoff = glyph.xoffset;
+	      glyph.xoffset;
 	      var kern = lastGlyph ? getKerning(font, lastGlyph.id, glyph.id) : 0;
 	      curPen += kern;
 
@@ -4420,7 +4418,7 @@
 	  common.scaleW = buf.readUInt16LE(i+4);
 	  common.scaleH = buf.readUInt16LE(i+6);
 	  common.pages = buf.readUInt16LE(i+8);
-	  var bitField = buf.readUInt8(i+10);
+	  buf.readUInt8(i+10);
 	  common.packed = 0;
 	  common.alphaChnl = buf.readUInt8(i+11);
 	  common.redChnl = buf.readUInt8(i+12);
@@ -6204,7 +6202,7 @@
 	      } else {
 	        progress = strings[0];
 	        for (var s = 0; s < stringsLength; s++) {
-	          var a = strings[s];
+	          strings[s];
 	          var b = strings[s + 1];
 	          var n$1 = numbers[s];
 	          if (!isNaN(n$1)) {
@@ -51824,10 +51822,10 @@
 	    var match = navigator.userAgent.match(/.*Chrome\/([0-9\.]*)/);
 	    if (match) {
 	      var _match$1$split = match[1].split('.'),
-	          _match$1$split2 = slicedToArray(_match$1$split, 4),
-	          major = _match$1$split2[0],
-	          minor = _match$1$split2[1],
-	          branch = _match$1$split2[2],
+	          _match$1$split2 = slicedToArray(_match$1$split, 4);
+	          _match$1$split2[0];
+	          _match$1$split2[1];
+	          var branch = _match$1$split2[2],
 	          build = _match$1$split2[3];
 	      value = parseInt(branch, 10) === 3325 && parseInt(build, 10) < 148;
 	    }
@@ -54976,7 +54974,7 @@
 	};
 	WebVRPolyfill.prototype.getVRDisplays = function () {
 	  var _this = this;
-	  var config = this.config;
+	  this.config;
 	  if (!this.hasNative) {
 	    return Promise.resolve(this.getPolyfillDisplays());
 	  }
@@ -76132,7 +76130,7 @@
 			Type.time = {};
 			Type.time.is = function(t){ return t? t instanceof Date : (+new Date().getTime()) };
 
-			var fn_is = Type.fn.is;
+			Type.fn.is;
 			var list_is = Type.list.is;
 			var obj = Type.obj, obj_is = obj.is, obj_has = obj.has, obj_map = obj.map;
 			module.exports = Type;
@@ -76352,8 +76350,8 @@
 				}
 				return last = t + ((N += 1) / D) + State.drift;
 			}
-			var time = Type.time.is, last = -Infinity, N = 0, D = 1000; // WARNING! In the future, on machines that are D times faster than 2016AD machines, you will want to increase D by another several orders of magnitude so the processing speed never out paces the decimal resolution (increasing an integer effects the state accuracy).
-			var perf = (typeof performance !== 'undefined')? (performance.timing && performance) : false, start = (perf && perf.timing && perf.timing.navigationStart) || (perf = false);
+			Type.time.is; var last = -Infinity, N = 0, D = 1000; // WARNING! In the future, on machines that are D times faster than 2016AD machines, you will want to increase D by another several orders of magnitude so the processing speed never out paces the decimal resolution (increasing an integer effects the state accuracy).
+			var perf = (typeof performance !== 'undefined')? (performance.timing && performance) : false; (perf && perf.timing && perf.timing.navigationStart) || (perf = false);
 			var S_ = State._ = '>';
 			State.drift = 0;
 			State.is = function(n, k, o){ // convenience function to get the state on a key on a node and return it.
@@ -76574,7 +76572,7 @@
 					this.obj[k] = this.opt.seen[tmp] = Graph.to(this.graph, tmp, this.opt);
 				}
 			}());
-			var fn_is = Type.fn.is;
+			Type.fn.is;
 			var obj = Type.obj, obj_is = obj.is, obj_del = obj.del, obj_has = obj.has, obj_empty = obj.empty, obj_put = obj.put, obj_map = obj.map, obj_copy = obj.copy;
 			var u;
 			module.exports = Graph;
@@ -76750,7 +76748,7 @@
 				}
 				function map(msg){
 					var DBG; if(DBG = (msg._||'').DBG){ DBG.pa = +new Date; DBG.pm = DBG.pm || +new Date;}
-	      	var eve = this, root = eve.as, graph = root.graph, ctx = msg._, put = msg.put, soul = put['#'], key = put['.'], val = put[':'], state = put['>'], id = msg['#'], tmp;
+	      	var eve = this, root = eve.as, graph = root.graph, ctx = msg._, put = msg.put, soul = put['#'], key = put['.'], val = put[':'], state = put['>']; msg['#']; var tmp;
 					graph[soul] = state_ify(graph[soul], key, state, val, soul); // TODO: Only put in graph if subscribed? Relays vs Browsers?
 					chain(ctx, soul, key, (u !== (tmp = put['=']))? tmp : val, state); // TODO: This should NOT be how the API works, this should be done at an extension layer, but hacky solution to migrate with old code for now.
 					if((tmp = ctx.out) && (tmp = tmp.put)){
@@ -76873,7 +76871,7 @@
 				function perf(node, soul){ if(node !== this.graph[soul]){ return true } } // HNPERF: do not port!
 
 				Gun.on._get = function(msg, gun){
-					var root = gun._, get = msg.get, soul = get[_soul], node = root.graph[soul], has = get[_has], tmp;
+					var root = gun._, get = msg.get, soul = get[_soul], node = root.graph[soul], has = get[_has];
 					var next = root.next || (root.next = {}), at = next[soul];
 					// queue concurrent GETs?
 					var ctx = msg._||'', DBG = ctx.DBG = msg.DBG;
@@ -76889,7 +76887,7 @@
 						node = Gun.window? Gun.obj.copy(node) : node; // HNPERF: If !browser bump Performance? Is this too dangerous to reference root graph? Copy / shallow copy too expensive for big nodes. Gun.obj.to(node); // 1 layer deep copy // Gun.obj.copy(node); // too slow on big nodes
 					}
 					node = Gun.graph.node(node);
-					tmp = (at||empty).ack;
+					(at||empty).ack;
 					var faith = function(){}; faith.ram = faith.faith = true; // HNPERF: We're testing performance improvement by skipping going through security again, but this should be audited.
 					faith.$ = msg.$;
 					DBG && (DBG.ga = +new Date);
@@ -76936,8 +76934,8 @@
 
 			var list_is = Gun.list.is;
 			var text = Gun.text, text_is = text.is, text_rand = text.random;
-			var obj = Gun.obj, obj_empty = obj.empty, obj_is = obj.is, obj_has = obj.has, obj_to = obj.to, obj_map = obj.map, obj_copy = obj.copy;
-			var state_lex = Gun.state.lex, state_ify = Gun.state.ify, state_is = Gun.state.is, _soul = Gun.val.link._, _has = '.', node_ = Gun.node._, val_is = Gun.val.is, rel_is = Gun.val.link.is, state_ = Gun.state._;
+			var obj = Gun.obj; obj.empty; var obj_is = obj.is, obj_has = obj.has, obj_to = obj.to, obj_map = obj.map; obj.copy;
+			Gun.state.lex; var state_ify = Gun.state.ify, state_is = Gun.state.is, _soul = Gun.val.link._, _has = '.', node_ = Gun.node._, val_is = Gun.val.is; Gun.val.link.is; var state_ = Gun.state._;
 			var empty = {}, u;
 			var C;
 
@@ -77143,7 +77141,7 @@
 					if(cat.next){ obj_map(change, map, {msg: msg, cat: cat}); }
 					return;
 				}
-				var was = root.stop;
+				root.stop;
 				tmp = root.stop || {};
 				tmp = tmp[at.id] || (tmp[at.id] = {});
 				//if(tmp[cat.id]){ return }
@@ -77225,7 +77223,7 @@
 			}
 			function not(at, msg){
 				if(!(at.has || at.soul)){ return }
-				var tmp = at.map, root = at.root;
+				var tmp = at.map; at.root;
 				at.map = null;
 				if(at.has){
 					if(at.dub && at.root.stop){ at.dub = null; }
@@ -77292,9 +77290,9 @@
 				Gun.on.put(msg);
 			}
 			var empty = {}, u;
-			var obj = Gun.obj, obj_has = obj.has, obj_put = obj.put, obj_del = obj.del, obj_to = obj.to, obj_map = obj.map;
+			var obj = Gun.obj, obj_has = obj.has; obj.put; var obj_del = obj.del, obj_to = obj.to, obj_map = obj.map;
 			var text_rand = Gun.text.random;
-			var _soul = Gun.val.link._, node_ = Gun.node._;
+			Gun.val.link._; var node_ = Gun.node._;
 		})(USE, './chain');
 	USE(function(module){
 			var Gun = USE('./root');
@@ -77378,8 +77376,8 @@
 					tmp = cat.jam; delete cat.jam; // tmp = cat.jam.splice(0, 100);
 					//if(tmp.length){ process.nextTick(function(){ go(msg, eve) }) }
 					while(as = tmp[i++]){ //Gun.obj.map(tmp, function(as, cb){
-						var cb = as[0], id; as = as[1];
-						cb && cb(id = at.link || at.soul || rel.is(msg.put) || node_soul(msg.put) || at.dub, as, msg, eve);
+						var cb = as[0]; as = as[1];
+						cb && cb(at.link || at.soul || rel.is(msg.put) || node_soul(msg.put) || at.dub, as, msg, eve);
 					} //);
 				}, {out: {get: {'.':true}}});
 				return gun;
@@ -77420,21 +77418,21 @@
 				var cat = this.on;
 				if(!at || cat.soul || cat.has){ return this.off() }
 				if(!(at = (at = (at = at.$ || at)._ || at).id)){ return }
-				var map = cat.map, tmp, seen;
+				cat.map; var seen;
 				//if(!map || !(tmp = map[at]) || !(tmp = tmp.at)){ return }
-				if(tmp = (seen = this.seen || (this.seen = {}))[at]){ return true }
+				if((seen = this.seen || (this.seen = {}))[at]){ return true }
 				seen[at] = true;
 				return;
 			}
-			var obj = Gun.obj, obj_map = obj.map, obj_has = obj.has, obj_to = Gun.obj.to;
+			var obj = Gun.obj; obj.map; obj.has; var obj_to = Gun.obj.to;
 			var num_is = Gun.num.is;
-			var rel = Gun.val.link, node_soul = Gun.node.soul, node_ = Gun.node._;
+			var rel = Gun.val.link, node_soul = Gun.node.soul; Gun.node._;
 			var empty = {}, u;
 		})(USE, './get');
 	USE(function(module){
 			var Gun = USE('./root');
 			Gun.chain.put = function(data, cb, as){
-				var gun = this, at = (gun._), root = at.root.$, ctx = root._, tmp;
+				var gun = this, at = (gun._), root = at.root.$; root._; var tmp;
 				as = as || {};
 				as.data = data;
 				as.via = as.$ = as.via || as.$ || gun;
@@ -77552,7 +77550,7 @@
 				var is = Gun.is(v);
 				if(k || !at.path.length){ return }
 				(as.res||iife)(function(){
-					var path = at.path, ref = as.ref, opt = as.opt;
+					var path = at.path, ref = as.ref; as.opt;
 					var i = 0, l = path.length;
 					for(i; i < l; i++){
 						ref = ref.get(path[i]);
@@ -77571,7 +77569,7 @@
 				//if(is){ return {} }
 			}
 			function soul(id, as, msg, eve){
-				var as = as.as, path = as.p, ref = as.ref, cat = as.at, pat = []; as = as.as;
+				var as = as.as; as.p; var ref = as.ref, cat = as.at, pat = []; as = as.as;
 				ref.back(function(at){
 					if(sat = at.soul || at.link || at.dub){ return sat }
 					pat.push(at.has || at.get);
@@ -77653,7 +77651,7 @@
 				}
 				as.ref.put(as.data, as.soul, as);
 			}
-			var obj = Gun.obj, obj_is = obj.is, obj_put = obj.put, obj_map = obj.map, obj_empty = obj.empty;
+			var obj = Gun.obj, obj_is = obj.is, obj_put = obj.put; obj.map; var obj_empty = obj.empty;
 			var u, empty = {}, noop = function(){}, iife = function(fn,as){fn.call(as||empty);};
 			var node_ = Gun.node._;
 		})(USE, './put');
@@ -77687,7 +77685,7 @@
 			};
 
 			function ok(msg, ev){ var opt = this;
-				var gun = msg.$, at = (gun||{})._ || {}, data = at.put || msg.put, cat = opt.at, tmp;
+				var gun = msg.$, at = (gun||{})._ || {}, data = at.put || msg.put; opt.at; var tmp;
 				if(u === data){
 					return;
 				}
@@ -77743,7 +77741,7 @@
 
 			function val(msg, eve, to){
 				if(!msg.$){ eve.off(); return }
-				var opt = this.as, cat = opt.at, gun = msg.$, at = gun._, data = at.put || msg.put, link, tmp;
+				var opt = this.as; opt.at; var gun = msg.$, at = gun._, data = at.put || msg.put, link, tmp;
 				if(tmp = msg.$$){
 					link = tmp = (msg.$$._);
 					if(u !== link.put){
@@ -77801,7 +77799,7 @@
 				at.on('off', {});
 				return gun;
 			};
-			var obj = Gun.obj, obj_map = obj.map, obj_has = obj.has, obj_del = obj.del, obj_to = obj.to;
+			var obj = Gun.obj, obj_map = obj.map; obj.has; var obj_del = obj.del; obj.to;
 			var rel = Gun.val.link;
 			var noop = function(){}, u;
 		})(USE, './on');
@@ -77946,7 +77944,7 @@
 				if(root.once){ return }
 				if(false === opt.localStorage){ return }
 				opt.prefix = opt.file || 'gun/';
-				var graph = root.graph, acks = {}, count = 0, to;
+				root.graph; var acks = {}, count = 0, to;
 				var disk = Gun.obj.ify(store.getItem(opt.prefix)) || {};
 				root.on('localStorage', disk); // NON-STANDARD EVENT!
 
@@ -78110,7 +78108,7 @@
 						} // TODO: Temporary? If ack via trace has been lost, acks will go to all peers, which trashes browser bandwidth. Not relaying the ack will force sender to ask for ack again. Note, this is technically wrong for mesh behavior.
 						if(!peer && mesh.way){ return mesh.way(msg) }
 						if(!peer || !peer.id){						if(!Type.obj.is(peer || opt.peers)){ return false }
-							var P = opt.puff, ps = opt.peers, pl = Object.keys(peer || opt.peers || {}); // TODO: BETTER PERF? No object.keys? It is polyfilled by Type.js tho.
+							opt.puff; var ps = opt.peers, pl = Object.keys(peer || opt.peers || {}); // TODO: BETTER PERF? No object.keys? It is polyfilled by Type.js tho.
 	(function go(){
 								var S = +new Date;
 								//Type.obj.map(peer || opt.peers, each); // in case peer is a peer list.
@@ -78291,7 +78289,7 @@
 					this.to[k] = this.on[k];
 				}
 			}());
-			var obj_is = Type.obj.is, obj_map = Type.obj.map;
+			var obj_is = Type.obj.is; Type.obj.map;
 
 		  try{ module.exports = Mesh; }catch(e){}
 
@@ -78317,7 +78315,7 @@
 
 				var mesh = opt.mesh = opt.mesh || Gun.Mesh(root);
 
-				var wire = mesh.wire || opt.wire;
+				mesh.wire || opt.wire;
 				mesh.wire = opt.wire = open;
 				function open(peer){ try{
 					if(!peer || !peer.url){ return wire && wire(peer) }

@@ -4,6 +4,8 @@
   "description": "A library for virtual reality",
   "main": "neonorigami.js",
   "scripts": {
+    "build": "rollup -c",
+    "dev": "rollup -w -c rollup-dev.config.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -24,7 +26,8 @@
     "aframe": "^1.1.0",
     "cyberdeck": "file:../cyberdeck",
     "gun": "^0.2020.520",
-    "lit-element": "^2.4.0"
+    "lit-element": "^2.4.0",
+    "rollup": "^2.38.1"
   },
   "devDependencies": {
     "@rollup/plugin-node-resolve": "^11.0.1",

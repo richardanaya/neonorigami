@@ -4,6 +4,7 @@
   "description": "Neon Origami components for A-Frame",
   "main": "aframe-neonorigami.js",
   "scripts": {
+    "build": "rollup -c",
     "dev": "rollup -w -c rollup-dev.config.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

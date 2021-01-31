@@ -1,9 +1,9 @@
 build:
-	cd js/neonorigami && rollup -c
-	cd js/aframe-neonorigami && rollup -c
-	cd js/cyberdeck && rollup -c
+	cd js/neonorigami && npm install && npm run build 
+	cd js/aframe-neonorigami && npm install && npm run build
+	cd js/cyberdeck && npm install && npm run build
 dev:
-	cd js/neonorigami && rollup -w -c rollup-dev.config.js
+	cd js/neonorigami && npm install && npm run dev
 dev-components:
 	cd js/aframe-neonorigami && npm install && npm run dev
 publish:

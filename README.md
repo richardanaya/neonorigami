@@ -46,14 +46,14 @@ Supported Devices:
 </html>
 ```
 
-# Developing Neon Origami
+# Developing the Neon Origami app
 
 ```bash
 make dev
 # open http://localhost:8080/
 ```
 
-# Developing Components
+# Developing components in isolation
 
 If you just want to work on Neon Origami components for A-Frame
 

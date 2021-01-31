@@ -5,7 +5,7 @@ build:
 dev:
 	cd js/neonorigami && rollup -w -c rollup-dev.config.js
 dev-components:
-	cd js/aframe-neonorigami && rollup -w -c  rollup-dev.config.js
+	cd js/aframe-neonorigami && npm install && npm run dev
 publish:
 	cd js/neonorigami && npm publish
 serve:

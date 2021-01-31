@@ -48,17 +48,16 @@ Supported Devices:
 
 # Developing Neon Origami
 
-```
-sudo npm install -g yarn
-sudo yarn global install rollup
+```bash
 make dev
+# open http://localhost:8080/
 ```
 
 # Developing Components
 
 If you just want to work on Neon Origami components for A-Frame
 
-```
+```bash
 make dev-components
 # open http://localhost:8081/
 ```

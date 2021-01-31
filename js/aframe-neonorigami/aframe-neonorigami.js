@@ -809,10 +809,11 @@
     var Land = /** @class */ (function () {
         function Land(scene, pointWidth) {
             this.scene = scene;
+            var details = 200;
             var map = new ProceduralTerrain({
                 height: pointWidth,
                 width: pointWidth,
-                details: 20,
+                details: details,
                 continent_factor: 2,
             });
             map.generateMaps(1);
@@ -824,18 +825,26 @@
                 aoMap: loader.load('Ground027_2K_AmbientOcclusion.jpg'),
                 roughnessMap: loader.load('Ground027_2K_Roughness.jpg'),
             });
+            var min = 100000;
+            var max = -100000;
+            for (var x = 0; x < pointWidth; x++) {
+                for (var y = 0; y < pointWidth; y++) {
+                    min = Math.min(min, noise[x][y]);
+                    max = Math.max(max, noise[x][y]);
+                }
+            }
             this.scene.add(new THREE.Mesh(heightMapGrid(pointWidth, function (x, y) {
                 // height from noise, ranged 0.0-1.0
-                var heightFromNoise = noise[x][y] / 20;
+                var heightFromNoise = (noise[x][y] - min) / (max - min);
                 // get positions relative to center
                 var cx = x - pointWidth / 2;
                 var cy = y - pointWidth / 2;
                 var distanceFromCenter = Math.sqrt(cx * cx + cy * cy);
                 // let's make sure the area around map position 0,0 isn't too crazy
                 // further from center of map allows for more variation of height scale
-                var scale = distanceFromCenter / 2;
+                var scale = distanceFromCenter / 5;
                 // lets center our height scale around zero so we have some above and below water
-                var height = heightFromNoise * scale - (scale / 2);
+                var height = heightFromNoise * scale - 5;
                 return height;
             }), this.landShader));
         }

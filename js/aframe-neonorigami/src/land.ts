@@ -4,10 +4,11 @@ import { heightMapGrid } from "./geometry"
 export class Land {
     private landShader: any;
     constructor(private scene, pointWidth: number) {
+        const details = 200;
         var map = new ProceduralTerrain({
             height: pointWidth, // Size of map
             width: pointWidth, // Size of map
-            details: 20, // Range of values each tile can be
+            details: details, // Range of values each tile can be
             continent_factor: 2, // Acts as a multiplier on the Simplex results
         });
         map.generateMaps(1)
@@ -21,18 +22,27 @@ export class Land {
             roughnessMap: loader.load('Ground027_2K_Roughness.jpg'),
         })
 
+        let min = 100000
+        let max = -100000;
+        for(let x=0;x<pointWidth;x++){
+            for(let y=0;y<pointWidth;y++){
+                min = Math.min(min,noise[x][y]);
+                max = Math.max(max,noise[x][y]);
+            }   
+        }
+
         this.scene.add(new THREE.Mesh(heightMapGrid(pointWidth, (x: number, y: number) => {
             // height from noise, ranged 0.0-1.0
-            let heightFromNoise = noise[x][y] / 20;
+            let heightFromNoise = (noise[x][y]-min)/(max-min);
             // get positions relative to center
             let cx = x - pointWidth / 2;
             let cy = y - pointWidth / 2;
             let distanceFromCenter = Math.sqrt(cx * cx + cy * cy);
             // let's make sure the area around map position 0,0 isn't too crazy
             // further from center of map allows for more variation of height scale
-            let scale = distanceFromCenter / 2;
+            let scale = distanceFromCenter/5;
             // lets center our height scale around zero so we have some above and below water
-            let height = heightFromNoise * scale - (scale / 2);
+            let height = heightFromNoise * scale-5 ;
             return height;
         }), this.landShader));
     }

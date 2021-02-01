@@ -805,6 +805,10 @@
         geometry.computeVertexNormals();
         return geometry;
     }
+    function infiniteWrap(texture) {
+        texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+        return texture;
+    }
     var Land = /** @class */ (function () {
         function Land(parent, colliderGroup) {
             this.parent = parent;
@@ -834,13 +838,12 @@
             this.landShader.onBeforeCompile = function (shader) {
                 shader.fragmentShader = shader.fragmentShader.replace('#include <alphamap_fragment>', "diffuseColor.a *= texture2D( alphaMap, vUv2 ).g;");
             };
-            this.baseShader = new THREE.MeshStandardMaterial({
-                map: loader.load('Ground027_2K_Color.jpg'),
-                normalMap: loader.load('Ground027_2K_Normal.jpg'),
-                aoMap: loader.load('Ground027_2K_AmbientOcclusion.jpg'),
-                roughnessMap: loader.load('Ground027_2K_Roughness.jpg'),
-                vertexColors: THREE.VertexColors,
-            });
+            this.baseShader = this.landShader.clone();
+            this.baseShader.map = infiniteWrap(loader.load('Ground027_2K_Color.jpg'));
+            this.baseShader.alphaMap = undefined;
+            this.baseShader.normalMap = infiniteWrap(loader.load('Ground027_2K_Normal.jpg'));
+            this.baseShader.aoMap = infiniteWrap(loader.load('Ground027_2K_AmbientOcclusion.jpg'));
+            this.baseShader.roughnessMap = infiniteWrap(loader.load('Ground027_2K_Roughness.jpg'));
             var min = 100000;
             var max = -100000;
             var color = [];
@@ -868,12 +871,12 @@
                 return new THREE.Color(color[y * pointWidth + x], color[y * pointWidth + x], color[y * pointWidth + x]);
             });
             var top = new THREE.Mesh(geo, this.landShader);
-            var bottom = new THREE.Mesh(geo, this.baseShader);
             top.position.y = .01;
             this.parent.add(top);
             // we attach ONLY base to collider group to reduce raycasting logic
+            var bottom = new THREE.Mesh(geo, this.baseShader);
             this.colliderGroup.add(bottom);
-            // sea basin
+            // Sea basin
             var w = 50000;
             var h = 50000;
             var geometry = new THREE.PlaneGeometry(w, h, 1, 1);
@@ -886,7 +889,7 @@
             uvs[1][2].set(w, h);
             var mesh = new THREE.Mesh(geometry, this.baseShader);
             mesh.rotation.x = -Math.PI / 2;
-            mesh.position.y = -30;
+            mesh.position.y = -5.1;
             this.parent.add(mesh);
         }
         return Land;
@@ -916,7 +919,7 @@
             uvs[1][2].set(w, h);
             var mesh = new THREE.Mesh(geometry, this.waterShader);
             mesh.rotation.x = -Math.PI / 2;
-            this.parent.add(mesh);
+            //this.parent.add(mesh);
         }
         return Sea;
     }());
@@ -936,7 +939,7 @@
             renderer.shadowMap.enabled = true;
             this.scene = this.el.closest("a-scene").object3D;
 
-            let colliderGroup = new THREE.Group();
+            let colliderGroup = new THREE.Object3D();
             this.lighting = new Lighting(renderer, this.scene);
             this.sky = new Sky(this.scene);
             this.land = new Land(this.scene, colliderGroup);

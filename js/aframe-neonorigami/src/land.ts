@@ -52,6 +52,11 @@ function heightMapGrid(pointWidth, heightCalc, vertexColorCalc) {
     return geometry;
 }
 
+function infiniteWrap(texture) {
+    texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+    return texture;
+}
+
 export class Land {
     private landShader: any;
     private baseShader: any;
@@ -88,14 +93,12 @@ export class Land {
             )
         }
 
-        this.baseShader = new THREE.MeshStandardMaterial({
-            map: loader.load('Ground027_2K_Color.jpg'),
-            normalMap: loader.load('Ground027_2K_Normal.jpg'),
-            aoMap: loader.load('Ground027_2K_AmbientOcclusion.jpg'),
-            roughnessMap: loader.load('Ground027_2K_Roughness.jpg'),
-            vertexColors: THREE.VertexColors,
-        })
-
+        this.baseShader = this.landShader.clone();
+        this.baseShader.map = infiniteWrap(loader.load('Ground027_2K_Color.jpg'));
+        this.baseShader.alphaMap = undefined;
+        this.baseShader.normalMap = infiniteWrap(loader.load('Ground027_2K_Normal.jpg'));
+        this.baseShader.aoMap = infiniteWrap(loader.load('Ground027_2K_AmbientOcclusion.jpg'));
+        this.baseShader.roughnessMap = infiniteWrap(loader.load('Ground027_2K_Roughness.jpg'));
 
         let min = 100000
         let max = -100000;
@@ -123,15 +126,15 @@ export class Land {
         }, (x: number, y: number) => {
             return new THREE.Color(color[y * pointWidth + x], color[y * pointWidth + x], color[y * pointWidth + x])
         });
-        let top = new THREE.Mesh(geo, this.landShader);
-        let bottom = new THREE.Mesh(geo, this.baseShader)
+        const top = new THREE.Mesh(geo, this.landShader);
         top.position.y = .01;
         this.parent.add(top);
 
         // we attach ONLY base to collider group to reduce raycasting logic
+        const bottom = new THREE.Mesh(geo, this.baseShader)
         this.colliderGroup.add(bottom);
 
-        // sea basin
+        // Sea basin
         const w = 50000;
         const h = 50000;
         const geometry = new THREE.PlaneGeometry(w, h, 1, 1);
@@ -145,7 +148,7 @@ export class Land {
         uvs[1][2].set(w, h);
         const mesh = new THREE.Mesh(geometry, this.baseShader);
         mesh.rotation.x = -Math.PI / 2;
-        mesh.position.y = -30;
+        mesh.position.y = -5.1;
         this.parent.add(mesh);
     }
 }

@@ -41,6 +41,6 @@ export class Sea {
         uvs[1][2].set(w, h);
         const mesh = new THREE.Mesh(geometry, this.waterShader);
         mesh.rotation.x = -Math.PI / 2;
-        this.parent.add(mesh);
+        //this.parent.add(mesh);
     }
 }

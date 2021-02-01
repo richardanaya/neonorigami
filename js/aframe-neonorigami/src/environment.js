@@ -18,7 +18,7 @@ AFRAME.registerComponent('neon-origami-environment', {
         renderer.shadowMap.enabled = true;
         this.scene = this.el.closest("a-scene").object3D;
 
-        let colliderGroup = new THREE.Group()
+        let colliderGroup = new THREE.Object3D()
         this.lighting = new Lighting(renderer, this.scene);
         this.sky = new Sky(this.scene);
         this.land = new Land(this.scene, colliderGroup);

@@ -119,7 +119,7 @@ export class Land {
             let cy = y - pointWidth / 2;
             let distanceFromCenter = Math.sqrt(cx * cx + cy * cy);
             let taperDist = 10;
-            let taper = Math.max(-0.2, taperDist - distanceFromCenter) / taperDist
+            let taper = Math.max(-0.11, taperDist - distanceFromCenter) / taperDist
 
             let nearTaper = distanceFromCenter < 10 ? distanceFromCenter / 10 : 1
             // let's make sure the area around map position 0,0 isn't too crazy

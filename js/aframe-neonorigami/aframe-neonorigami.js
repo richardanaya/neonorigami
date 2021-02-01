@@ -869,7 +869,7 @@
                 var cy = y - pointWidth / 2;
                 var distanceFromCenter = Math.sqrt(cx * cx + cy * cy);
                 var taperDist = 10;
-                var taper = Math.max(-0.2, taperDist - distanceFromCenter) / taperDist;
+                var taper = Math.max(-0.11, taperDist - distanceFromCenter) / taperDist;
                 var nearTaper = distanceFromCenter < 10 ? distanceFromCenter / 10 : 1;
                 // let's make sure the area around map position 0,0 isn't too crazy
                 // further from center of map allows for more variation of height scale
@@ -963,7 +963,7 @@
                 let d = document.createElement("div");
                 d.style.position = "absolute";
                 d.style.left = -999999999999999999;
-                d.innerHTML = `<iframe width="560" height="315" src="https://www.youtube.com/embed/kCsAIG3hHfs?autoplay=1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
+                d.innerHTML = `<iframe width="560" height="315" src="https://www.youtube.com/embed/atMdf0rhbpI?autoplay=1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
                 document.body.append(d);
             });
         },

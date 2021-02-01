@@ -826,25 +826,30 @@
             map.generateMaps(1);
             var noise = map.getHeightMap();
             var loader = new THREE.TextureLoader();
-            this.landShader = new THREE.MeshStandardMaterial({
-                transparent: true,
-                map: loader.load('Ground037_2K_Color.jpg'),
-                alphaMap: loader.load('terrain.jpg'),
-                normalMap: loader.load('Ground037_2K_Normal.jpg'),
-                aoMap: loader.load('Ground037_2K_AmbientOcclusion.jpg'),
-                roughnessMap: loader.load('Ground037_2K_Roughness.jpg'),
+            /* this.landShader = new THREE.MeshStandardMaterial({
+                        transparent: true,
+                        map: loader.load('Ground037_2K_Color.jpg'),
+                        alphaMap: loader.load('terrain.jpg'),
+                        normalMap: loader.load('Ground037_2K_Normal.jpg'),
+                        aoMap: loader.load('Ground037_2K_AmbientOcclusion.jpg'),
+                        roughnessMap: loader.load('Ground037_2K_Roughness.jpg'),
+                        vertexColors: THREE.VertexColors,
+                    })
+            
+                    // hack our material so it uses UV2
+                    this.landShader.onBeforeCompile = shader => {
+                        shader.fragmentShader = shader.fragmentShader.replace(
+                            '#include <alphamap_fragment>',
+                            `diffuseColor.a *= texture2D( alphaMap, vUv2 ).g;`
+                        )
+                    }*/
+            var desertShader = new THREE.MeshStandardMaterial({
+                map: infiniteWrap(loader.load('Ground027_2K_Color.jpg')),
+                normalMap: infiniteWrap(loader.load('Ground027_2K_Normal.jpg')),
+                aoMap: infiniteWrap(loader.load('Ground027_2K_AmbientOcclusion.jpg')),
+                roughnessMap: infiniteWrap(loader.load('Ground027_2K_Roughness.jpg')),
                 vertexColors: THREE.VertexColors,
             });
-            // hack our material so it uses UV2
-            this.landShader.onBeforeCompile = function (shader) {
-                shader.fragmentShader = shader.fragmentShader.replace('#include <alphamap_fragment>', "diffuseColor.a *= texture2D( alphaMap, vUv2 ).g;");
-            };
-            this.baseShader = this.landShader.clone();
-            this.baseShader.map = infiniteWrap(loader.load('Ground027_2K_Color.jpg'));
-            this.baseShader.alphaMap = undefined;
-            this.baseShader.normalMap = infiniteWrap(loader.load('Ground027_2K_Normal.jpg'));
-            this.baseShader.aoMap = infiniteWrap(loader.load('Ground027_2K_AmbientOcclusion.jpg'));
-            this.baseShader.roughnessMap = infiniteWrap(loader.load('Ground027_2K_Roughness.jpg'));
             var min = 100000;
             var max = -100000;
             var color = [];
@@ -862,11 +867,13 @@
                 var cx = x - pointWidth / 2;
                 var cy = y - pointWidth / 2;
                 var distanceFromCenter = Math.sqrt(cx * cx + cy * cy);
+                var taperDist = 10;
+                var taper = Math.max(-0.2, taperDist - distanceFromCenter) / taperDist;
                 // let's make sure the area around map position 0,0 isn't too crazy
                 // further from center of map allows for more variation of height scale
-                var scale = distanceFromCenter * 5 / 5;
+                var scale = distanceFromCenter * 3;
                 // lets center our height scale around zero so we have some above and below water
-                var height = heightFromNoise * scale - 5;
+                var height = heightFromNoise * scale * taper;
                 return height;
             }, function (x, y) {
                 return new THREE.Color(color[y * pointWidth + x], color[y * pointWidth + x], color[y * pointWidth + x]);
@@ -875,7 +882,7 @@
               top.position.y = .01;
               this.parent.add(top);*/
             // we attach ONLY base to collider group to reduce raycasting logic
-            var bottom = new THREE.Mesh(geo, this.baseShader);
+            var bottom = new THREE.Mesh(geo, desertShader);
             this.colliderGroup.add(bottom);
             // Sea basin
             var w = 50000;
@@ -888,9 +895,9 @@
             uvs[1][0].set(0, 0);
             uvs[1][1].set(w, 0);
             uvs[1][2].set(w, h);
-            var mesh = new THREE.Mesh(geometry, this.baseShader);
+            var mesh = new THREE.Mesh(geometry, desertShader);
             mesh.rotation.x = -Math.PI / 2;
-            mesh.position.y = -30;
+            mesh.position.y = -1;
             this.parent.add(mesh);
         }
         return Land;

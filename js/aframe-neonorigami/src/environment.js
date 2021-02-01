@@ -9,24 +9,23 @@ AFRAME.registerComponent('neon-origami-environment', {
     },
     init: function () {
         this.didChange = true;
-        
+
         // get the three js scene
         const renderer = this.el.closest("a-scene").renderer;
         renderer.physicallyCorrectLights = true;
         renderer.toneMapping = THREE.ACESFilmicToneMapping;
         renderer.toneMappingExposure = 1.2;
-        renderer.shadowMapEnabled = true;
+        renderer.shadowMap.enabled = true;
         this.scene = this.el.closest("a-scene").object3D;
 
-        // 100 points width and height centered around 0,0
-        const pointWidth = 5;
+
 
         let group = new THREE.Group()
         this.lighting = new Lighting(renderer, group);
         this.sky = new Sky(group);
-        this.land = new Land(group, pointWidth);
-        this.sea = new Sea(group, pointWidth);
-        this.el.setObject3D("mesh",group);
+        this.land = new Land(group);
+        this.sea = new Sea(group);
+        this.el.setObject3D("mesh", group);
     },
     update: function (oldData) {
         if (oldData["sky-color"] != this.data["sky-color"]) {

@@ -801,22 +801,22 @@
                     [new THREE.Vector2(0, 0), new THREE.Vector2(0, 1), new THREE.Vector2(1, 0)],
                     [new THREE.Vector2(1, 0), new THREE.Vector2(0, 1), new THREE.Vector2(1, 1)],
                 );
-                let dx = 1/(pointWidth - 1);
-                let dy = 1/(pointWidth - 1);
+                let dx = 1 / (pointWidth - 1);
+                let dy = 1 / (pointWidth - 1);
                 geometry.faceVertexUvs[1].push(
-                    [new THREE.Vector2(x*dx, y*dy), new THREE.Vector2(x*dx, y*dy+dy), new THREE.Vector2(x*dx+dx, y*dy)],
-                    [new THREE.Vector2(x*dx+dx, y*dy), new THREE.Vector2(x*dx, y*dy+dy), new THREE.Vector2(x*dx+dx, y*dy+dy)],
+                    [new THREE.Vector2(x * dx, y * dy), new THREE.Vector2(x * dx, y * dy + dy), new THREE.Vector2(x * dx + dx, y * dy)],
+                    [new THREE.Vector2(x * dx + dx, y * dy), new THREE.Vector2(x * dx, y * dy + dy), new THREE.Vector2(x * dx + dx, y * dy + dy)],
                 );
-                if(vertexColorCalc){
+                if (vertexColorCalc) {
                     top.vertexColors.push(
-                        vertexColorCalc(x,y),
-                        vertexColorCalc(x,y+1),
-                        vertexColorCalc(x+1,y),
+                        vertexColorCalc(x, y),
+                        vertexColorCalc(x, y + 1),
+                        vertexColorCalc(x + 1, y),
                     );
                     bot.vertexColors.push(
-                        vertexColorCalc(x+1,y),
-                        vertexColorCalc(x,y+1),
-                        vertexColorCalc(x+1,y+1),
+                        vertexColorCalc(x + 1, y),
+                        vertexColorCalc(x, y + 1),
+                        vertexColorCalc(x + 1, y + 1),
                     );
                 }
             }
@@ -828,8 +828,10 @@
     }
 
     var Land = /** @class */ (function () {
-        function Land(scene, pointWidth) {
+        function Land(scene) {
             this.scene = scene;
+            // 100 points width and height centered around 0,0
+            var pointWidth = 5;
             var details = 200;
             var map = new ProceduralTerrain({
                 height: pointWidth,
@@ -897,8 +899,8 @@
     }());
 
     var Sea = /** @class */ (function () {
-        function Sea(scene, pointWidth) {
-            this.scene = scene;
+        function Sea(parent) {
+            this.parent = parent;
             this.waterShader = new THREE.ShaderMaterial({
                 transparent: true,
                 uniforms: {
@@ -908,7 +910,19 @@
                 vertexShader: "\n                varying vec2 vUv;\n                void main() {\n                    vUv = uv;\n                    gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );\n                }\n                            \n            ",
                 fragmentShader: "\n                void main() {\n                    // ocean blue\n                    gl_FragColor = vec4(0, 0.42, 0.58, .5);\n                }\n            "
             });
-            this.scene.add(new THREE.Mesh(heightMapGrid(pointWidth, function () { return 0; }), this.waterShader));
+            var w = 5000;
+            var h = 5000;
+            var geometry = new THREE.PlaneGeometry(w, h, 1, 1);
+            var uvs = geometry.faceVertexUvs[0];
+            uvs[0][0].set(0, h);
+            uvs[0][1].set(0, 0);
+            uvs[0][2].set(w, h);
+            uvs[1][0].set(0, 0);
+            uvs[1][1].set(w, 0);
+            uvs[1][2].set(w, h);
+            var mesh = new THREE.Mesh(geometry, this.waterShader);
+            mesh.rotation.x = -Math.PI / 2;
+            this.parent.add(mesh);
         }
         return Sea;
     }());
@@ -919,24 +933,23 @@
         },
         init: function () {
             this.didChange = true;
-            
+
             // get the three js scene
             const renderer = this.el.closest("a-scene").renderer;
             renderer.physicallyCorrectLights = true;
             renderer.toneMapping = THREE.ACESFilmicToneMapping;
             renderer.toneMappingExposure = 1.2;
-            renderer.shadowMapEnabled = true;
+            renderer.shadowMap.enabled = true;
             this.scene = this.el.closest("a-scene").object3D;
 
-            // 100 points width and height centered around 0,0
-            const pointWidth = 5;
+
 
             let group = new THREE.Group();
             this.lighting = new Lighting(renderer, group);
             this.sky = new Sky(group);
-            this.land = new Land(group, pointWidth);
-            this.sea = new Sea(group, pointWidth);
-            this.el.setObject3D("mesh",group);
+            this.land = new Land(group);
+            this.sea = new Sea(group);
+            this.el.setObject3D("mesh", group);
         },
         update: function (oldData) {
             if (oldData["sky-color"] != this.data["sky-color"]) {

@@ -4,7 +4,10 @@ import { heightMapGrid } from "./geometry"
 export class Land {
     private landShader: any;
     private baseShader: any;
-    constructor(private scene, pointWidth: number) {
+    constructor(private scene) {
+        // 100 points width and height centered around 0,0
+        const pointWidth = 5;
+
         const details = 200;
         var map = new ProceduralTerrain({
             height: pointWidth, // Size of map
@@ -50,7 +53,7 @@ export class Land {
             for (let y = 0; y < pointWidth; y++) {
                 min = Math.min(min, noise[x][y]);
                 max = Math.max(max, noise[x][y]);
-                color[y*pointWidth+x] = Math.random()*.2+.8;
+                color[y * pointWidth + x] = Math.random() * .2 + .8;
             }
         }
         const geo = heightMapGrid(pointWidth, (x: number, y: number) => {
@@ -66,8 +69,8 @@ export class Land {
             // lets center our height scale around zero so we have some above and below water
             let height = heightFromNoise * scale - 5;
             return height;
-        },(x: number, y: number) => {
-            return new THREE.Color(color[y*pointWidth+x],color[y*pointWidth+x],color[y*pointWidth+x])
+        }, (x: number, y: number) => {
+            return new THREE.Color(color[y * pointWidth + x], color[y * pointWidth + x], color[y * pointWidth + x])
         });
         let top = new THREE.Mesh(geo, this.landShader);
         let bottom = new THREE.Mesh(geo, this.baseShader)

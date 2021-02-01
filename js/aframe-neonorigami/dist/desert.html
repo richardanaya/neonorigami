@@ -1,0 +1,34 @@
+<html>
+
+<head>
+  <title>Neon Origami Components</title>
+  <script src="https://aframe.io/releases/1.1.0/aframe.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/aframe-blink-controls/dist/aframe-blink-controls.js"></script>
+  <script src="aframe-neonorigami.js"></script>
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@100&display=swap" rel="stylesheet">
+</head>
+
+<body>
+  <div id="title" style="    position: fixed;
+  left: 50%;
+  top: 50%;
+  top: 200px;
+  z-index: 3000;
+  font-size: 100px;
+  margin-left: -340;
+  font-family: 'Raleway', sans-serif;
+  color: black;
+  font-weight: 100;">NEON ORIGAMI</div>
+  <a-scene>
+    <a-entity id="player">
+      <a-entity id="camera" position="0 1.25 0" camera wasd-controls look-controls></a-entity>
+      <a-entity id="left-hand" oculus-touch-controls="hand: left" blink-controls="collisionEntities: .collision;">
+      </a-entity>
+      <a-entity id="right-hand" oculus-touch-controls="hand: right"></a-entity>
+    </a-entity>
+    <a-entity class="collision" neon-origami-environment />
+  </a-scene>
+</body>
+
+</html>

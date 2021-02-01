@@ -18,14 +18,14 @@ AFRAME.registerComponent('neon-origami-environment', {
         renderer.shadowMap.enabled = true;
         this.scene = this.el.closest("a-scene").object3D;
 
+        let colliderGroup = new THREE.Group()
+        this.lighting = new Lighting(renderer, this.scene);
+        this.sky = new Sky(this.scene);
+        this.land = new Land(this.scene, colliderGroup);
+        this.sea = new Sea(colliderGroup);
 
-
-        let group = new THREE.Group()
-        this.lighting = new Lighting(renderer, group);
-        this.sky = new Sky(group);
-        this.land = new Land(group);
-        this.sea = new Sea(group);
-        this.el.setObject3D("mesh", group);
+        // The arc teleport extension recursively looks at geomtry attached to a-frame element
+        this.el.setObject3D("mesh", colliderGroup);
     },
     update: function (oldData) {
         if (oldData["sky-color"] != this.data["sky-color"]) {

@@ -776,62 +776,41 @@
     };
 
     function heightMapGrid(pointWidth, heightCalc, vertexColorCalc) {
-        const geometry = new THREE.Geometry();
-        for (let y = 0; y < pointWidth; y++) {
-            for (let x = 0; x < pointWidth; x++) {
-                let px = -pointWidth / 2 + x;
-                let py = -pointWidth / 2 + y;
-                geometry.vertices.push(
-                    new THREE.Vector3(px, heightCalc(x, y), py),
-                );
+        var geometry = new THREE.Geometry();
+        for (var y = 0; y < pointWidth; y++) {
+            for (var x = 0; x < pointWidth; x++) {
+                var px = -pointWidth / 2 + x;
+                var py = -pointWidth / 2 + y;
+                geometry.vertices.push(new THREE.Vector3(px, heightCalc(x, y), py));
             }
         }
-
         geometry.faceVertexUvs[1] = [];
-        for (let y = 0; y < pointWidth - 1; y++) {
-            for (let x = 0; x < pointWidth - 1; x++) {
-                let curPoint = y * pointWidth + x;
-                const top = new THREE.Face3(curPoint, curPoint + pointWidth, curPoint + 1);
-                const bot = new THREE.Face3(curPoint + 1, curPoint + pointWidth, curPoint + pointWidth + 1);
-                geometry.faces.push(
-                    top,
-                    bot,
-                );
-                geometry.faceVertexUvs[0].push(
-                    [new THREE.Vector2(0, 0), new THREE.Vector2(0, 1), new THREE.Vector2(1, 0)],
-                    [new THREE.Vector2(1, 0), new THREE.Vector2(0, 1), new THREE.Vector2(1, 1)],
-                );
-                let dx = 1 / (pointWidth - 1);
-                let dy = 1 / (pointWidth - 1);
-                geometry.faceVertexUvs[1].push(
-                    [new THREE.Vector2(x * dx, y * dy), new THREE.Vector2(x * dx, y * dy + dy), new THREE.Vector2(x * dx + dx, y * dy)],
-                    [new THREE.Vector2(x * dx + dx, y * dy), new THREE.Vector2(x * dx, y * dy + dy), new THREE.Vector2(x * dx + dx, y * dy + dy)],
-                );
+        for (var y = 0; y < pointWidth - 1; y++) {
+            for (var x = 0; x < pointWidth - 1; x++) {
+                var curPoint = y * pointWidth + x;
+                var top = new THREE.Face3(curPoint, curPoint + pointWidth, curPoint + 1);
+                var bot = new THREE.Face3(curPoint + 1, curPoint + pointWidth, curPoint + pointWidth + 1);
+                geometry.faces.push(top, bot);
+                geometry.faceVertexUvs[0].push([new THREE.Vector2(0, 0), new THREE.Vector2(0, 1), new THREE.Vector2(1, 0)], [new THREE.Vector2(1, 0), new THREE.Vector2(0, 1), new THREE.Vector2(1, 1)]);
+                var dx = 1 / (pointWidth - 1);
+                var dy = 1 / (pointWidth - 1);
+                geometry.faceVertexUvs[1].push([new THREE.Vector2(x * dx, y * dy), new THREE.Vector2(x * dx, y * dy + dy), new THREE.Vector2(x * dx + dx, y * dy)], [new THREE.Vector2(x * dx + dx, y * dy), new THREE.Vector2(x * dx, y * dy + dy), new THREE.Vector2(x * dx + dx, y * dy + dy)]);
                 if (vertexColorCalc) {
-                    top.vertexColors.push(
-                        vertexColorCalc(x, y),
-                        vertexColorCalc(x, y + 1),
-                        vertexColorCalc(x + 1, y),
-                    );
-                    bot.vertexColors.push(
-                        vertexColorCalc(x + 1, y),
-                        vertexColorCalc(x, y + 1),
-                        vertexColorCalc(x + 1, y + 1),
-                    );
+                    top.vertexColors.push(vertexColorCalc(x, y), vertexColorCalc(x, y + 1), vertexColorCalc(x + 1, y));
+                    bot.vertexColors.push(vertexColorCalc(x + 1, y), vertexColorCalc(x, y + 1), vertexColorCalc(x + 1, y + 1));
                 }
             }
         }
-
         geometry.computeFaceNormals();
         geometry.computeVertexNormals();
         return geometry;
     }
-
     var Land = /** @class */ (function () {
-        function Land(scene) {
-            this.scene = scene;
+        function Land(parent, colliderGroup) {
+            this.parent = parent;
+            this.colliderGroup = colliderGroup;
             // 100 points width and height centered around 0,0
-            var pointWidth = 5;
+            var pointWidth = 100;
             var details = 200;
             var map = new ProceduralTerrain({
                 height: pointWidth,
@@ -891,9 +870,24 @@
             var top = new THREE.Mesh(geo, this.landShader);
             var bottom = new THREE.Mesh(geo, this.baseShader);
             top.position.y = .01;
-            this.scene.add(top);
-            this.scene.add(bottom);
-            //this.scene.add(geo, this.landShader);
+            this.parent.add(top);
+            // we attach ONLY base to collider group to reduce raycasting logic
+            this.colliderGroup.add(bottom);
+            // sea basin
+            var w = 50000;
+            var h = 50000;
+            var geometry = new THREE.PlaneGeometry(w, h, 1, 1);
+            var uvs = geometry.faceVertexUvs[0];
+            uvs[0][0].set(0, h);
+            uvs[0][1].set(0, 0);
+            uvs[0][2].set(w, h);
+            uvs[1][0].set(0, 0);
+            uvs[1][1].set(w, 0);
+            uvs[1][2].set(w, h);
+            var mesh = new THREE.Mesh(geometry, this.baseShader);
+            mesh.rotation.x = -Math.PI / 2;
+            mesh.position.y = -30;
+            this.parent.add(mesh);
         }
         return Land;
     }());
@@ -942,14 +936,14 @@
             renderer.shadowMap.enabled = true;
             this.scene = this.el.closest("a-scene").object3D;
 
+            let colliderGroup = new THREE.Group();
+            this.lighting = new Lighting(renderer, this.scene);
+            this.sky = new Sky(this.scene);
+            this.land = new Land(this.scene, colliderGroup);
+            this.sea = new Sea(colliderGroup);
 
-
-            let group = new THREE.Group();
-            this.lighting = new Lighting(renderer, group);
-            this.sky = new Sky(group);
-            this.land = new Land(group);
-            this.sea = new Sea(group);
-            this.el.setObject3D("mesh", group);
+            // The arc teleport extension recursively looks at geomtry attached to a-frame element
+            this.el.setObject3D("mesh", colliderGroup);
         },
         update: function (oldData) {
             if (oldData["sky-color"] != this.data["sky-color"]) {

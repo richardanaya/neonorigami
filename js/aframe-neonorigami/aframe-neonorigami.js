@@ -929,7 +929,7 @@
             this.scene = this.el.closest("a-scene").object3D;
 
             // 100 points width and height centered around 0,0
-            const pointWidth = 100;
+            const pointWidth = 5;
 
             let group = new THREE.Group();
             this.lighting = new Lighting(renderer, group);

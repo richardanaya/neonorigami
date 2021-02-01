@@ -889,7 +889,7 @@
             uvs[1][2].set(w, h);
             var mesh = new THREE.Mesh(geometry, this.baseShader);
             mesh.rotation.x = -Math.PI / 2;
-            mesh.position.y = -5.1;
+            mesh.position.y = -30;
             this.parent.add(mesh);
         }
         return Land;

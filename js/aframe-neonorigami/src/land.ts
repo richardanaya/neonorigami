@@ -127,9 +127,9 @@ export class Land {
         }, (x: number, y: number) => {
             return new THREE.Color(color[y * pointWidth + x], color[y * pointWidth + x], color[y * pointWidth + x])
         });
-        const top = new THREE.Mesh(geo, this.landShader);
-        top.position.y = .01;
-        this.parent.add(top);
+        /*  const top = new THREE.Mesh(geo, this.landShader);
+          top.position.y = .01;
+          this.parent.add(top);*/
 
         // we attach ONLY base to collider group to reduce raycasting logic
         const bottom = new THREE.Mesh(geo, this.baseShader)

@@ -1,10 +1,18 @@
 <html>
   <head>
     <script src="https://aframe.io/releases/1.1.0/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/aframe-blink-controls/dist/aframe-blink-controls.min.js"></script>
     <script src="aframe-neonorigami.js"></script>
   </head>
   <body>
     <a-scene>
+      <a-entity id="player">
+        <!-- camera -->
+        <a-entity id="camera" camera wasd-controls look-controls></a-entity>
+        <!-- hand controls -->
+        <a-entity id="left-hand" oculus-touch-controls="hand: left" blink-controls></a-entity>
+        <a-entity id="right-hand" oculus-touch-controls="hand: right"></a-entity>
+      </a-entity>
         <a-box position="-1 0.5 -3" rotation="0 45 0" color="#4CC3D9" shadow></a-box>
         <a-sphere position="0 1.25 -5" radius="1.25" color="#EF2D5E" shadow></a-sphere>
         <a-cylinder position="1 0.75 -3" radius="0.5" height="1.5" color="#FFC65D" shadow></a-cylinder>

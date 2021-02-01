@@ -873,7 +873,7 @@
                 var nearTaper = distanceFromCenter < 10 ? distanceFromCenter / 10 : 1;
                 // let's make sure the area around map position 0,0 isn't too crazy
                 // further from center of map allows for more variation of height scale
-                var scale = distanceFromCenter * 8;
+                var scale = distanceFromCenter * 5;
                 // lets center our height scale around zero so we have some above and below water
                 var height = heightFromNoise * scale * taper * nearTaper;
                 return height;

@@ -922,14 +922,14 @@
             
             // get the three js scene
             const renderer = this.el.closest("a-scene").renderer;
-            renderer.physicallyCorrectLights = true;
+            /*renderer.physicallyCorrectLights = true;
             renderer.toneMapping = THREE.ACESFilmicToneMapping;
             renderer.toneMappingExposure = 1.2;
-            renderer.shadowMapEnabled = true;
+            renderer.shadowMapEnabled = true;*/
             this.scene = this.el.closest("a-scene").object3D;
 
             // 100 points width and height centered around 0,0
-            const pointWidth = 200;
+            const pointWidth = 100;
 
             let group = new THREE.Group();
             this.lighting = new Lighting(renderer, group);

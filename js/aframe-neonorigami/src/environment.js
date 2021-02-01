@@ -17,6 +17,7 @@ AFRAME.registerComponent('neon-origami-environment', {
         renderer.toneMappingExposure = 1.2;
         renderer.shadowMap.enabled = true;
         this.scene = this.el.closest("a-scene").object3D;
+        this.scene.background = new THREE.Color(0xFFFFFF);
 
         let colliderGroup = new THREE.Object3D()
         this.lighting = new Lighting(renderer, this.scene);

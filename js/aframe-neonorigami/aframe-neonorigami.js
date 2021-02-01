@@ -846,6 +846,7 @@
             var desertShader = new THREE.MeshStandardMaterial({
                 map: infiniteWrap(loader.load('Ground027_2K_Color.jpg')),
                 normalMap: infiniteWrap(loader.load('Ground027_2K_Normal.jpg')),
+                roughness: 1.3,
                 aoMap: infiniteWrap(loader.load('Ground027_2K_AmbientOcclusion.jpg')),
                 roughnessMap: infiniteWrap(loader.load('Ground027_2K_Roughness.jpg')),
                 vertexColors: THREE.VertexColors,
@@ -869,11 +870,12 @@
                 var distanceFromCenter = Math.sqrt(cx * cx + cy * cy);
                 var taperDist = 10;
                 var taper = Math.max(-0.2, taperDist - distanceFromCenter) / taperDist;
+                var nearTaper = distanceFromCenter < 10 ? distanceFromCenter / 10 : 1;
                 // let's make sure the area around map position 0,0 isn't too crazy
                 // further from center of map allows for more variation of height scale
-                var scale = distanceFromCenter * 3;
+                var scale = distanceFromCenter * 8;
                 // lets center our height scale around zero so we have some above and below water
-                var height = heightFromNoise * scale * taper;
+                var height = heightFromNoise * scale * taper * nearTaper;
                 return height;
             }, function (x, y) {
                 return new THREE.Color(color[y * pointWidth + x], color[y * pointWidth + x], color[y * pointWidth + x]);
@@ -885,9 +887,9 @@
             var bottom = new THREE.Mesh(geo, desertShader);
             this.colliderGroup.add(bottom);
             // Sea basin
-            var w = 50000;
-            var h = 50000;
-            var geometry = new THREE.PlaneGeometry(w, h, 1, 1);
+            var w = 100;
+            var h = 100;
+            var geometry = new THREE.PlaneGeometry(w * 5, h * 5, 1, 1);
             var uvs = geometry.faceVertexUvs[0];
             uvs[0][0].set(0, h);
             uvs[0][1].set(0, 0);
@@ -897,7 +899,7 @@
             uvs[1][2].set(w, h);
             var mesh = new THREE.Mesh(geometry, desertShader);
             mesh.rotation.x = -Math.PI / 2;
-            mesh.position.y = -1;
+            mesh.position.y = -.1;
             this.parent.add(mesh);
         }
         return Land;

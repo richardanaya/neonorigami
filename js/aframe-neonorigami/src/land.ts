@@ -95,6 +95,7 @@ export class Land {
         const desertShader = new THREE.MeshStandardMaterial({
             map: infiniteWrap(loader.load('Ground027_2K_Color.jpg')),
             normalMap: infiniteWrap(loader.load('Ground027_2K_Normal.jpg')),
+            roughness: 1.3,
             aoMap: infiniteWrap(loader.load('Ground027_2K_AmbientOcclusion.jpg')),
             roughnessMap: infiniteWrap(loader.load('Ground027_2K_Roughness.jpg')),
             vertexColors: THREE.VertexColors,
@@ -119,11 +120,13 @@ export class Land {
             let distanceFromCenter = Math.sqrt(cx * cx + cy * cy);
             let taperDist = 10;
             let taper = Math.max(-0.2, taperDist - distanceFromCenter) / taperDist
+
+            let nearTaper = distanceFromCenter < 10 ? distanceFromCenter / 10 : 1
             // let's make sure the area around map position 0,0 isn't too crazy
             // further from center of map allows for more variation of height scale
-            let scale = distanceFromCenter * 3;
+            let scale = distanceFromCenter * 8;
             // lets center our height scale around zero so we have some above and below water
-            let height = heightFromNoise * scale * taper;
+            let height = heightFromNoise * scale * taper * nearTaper;
             return height;
         }, (x: number, y: number) => {
             return new THREE.Color(color[y * pointWidth + x], color[y * pointWidth + x], color[y * pointWidth + x])
@@ -137,9 +140,9 @@ export class Land {
         this.colliderGroup.add(bottom);
 
         // Sea basin
-        const w = 50000;
-        const h = 50000;
-        const geometry = new THREE.PlaneGeometry(w, h, 1, 1);
+        const w = 100;
+        const h = 100;
+        const geometry = new THREE.PlaneGeometry(w * 5, h * 5, 1, 1);
 
         const uvs = geometry.faceVertexUvs[0];
         uvs[0][0].set(0, h);
@@ -150,7 +153,7 @@ export class Land {
         uvs[1][2].set(w, h);
         const mesh = new THREE.Mesh(geometry, desertShader);
         mesh.rotation.x = -Math.PI / 2;
-        mesh.position.y = -1;
+        mesh.position.y = -.1;
         this.parent.add(mesh);
     }
 }

@@ -27,6 +27,14 @@ AFRAME.registerComponent('neon-origami-environment', {
 
         // The arc teleport extension recursively looks at geomtry attached to a-frame element
         this.el.setObject3D("mesh", colliderGroup);
+
+        document.querySelector('a-scene').addEventListener('enter-vr', function () {
+            let d = document.createElement("div");
+            d.style.position = "absolute";
+            d.style.left = -999999999999999999;
+            d.innerHTML = `<iframe width="560" height="315" src="https://www.youtube.com/embed/kCsAIG3hHfs?autoplay=1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`
+            document.body.append(d);
+        });
     },
     update: function (oldData) {
         if (oldData["sky-color"] != this.data["sky-color"]) {

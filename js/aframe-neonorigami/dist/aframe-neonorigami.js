@@ -919,7 +919,7 @@
         },
         init: function () {
             this.didChange = true;
-
+            
             // get the three js scene
             const renderer = this.el.closest("a-scene").renderer;
             renderer.physicallyCorrectLights = true;
@@ -932,9 +932,9 @@
             const pointWidth = 200;
 
             this.lighting = new Lighting(renderer, this.scene);
-            this.sky = new Sky(this.scene);
-            this.land = new Land(this.scene, pointWidth);
-            this.sea = new Sea(this.scene, pointWidth);
+            this.sky = new Sky(this.el.object3D);
+            this.land = new Land(this.el.object3D, pointWidth);
+            this.sea = new Sea(this.el.object3D, pointWidth);
         },
         update: function (oldData) {
             if (oldData["sky-color"] != this.data["sky-color"]) {

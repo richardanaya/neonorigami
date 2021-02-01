@@ -777,10 +777,11 @@
 
     function heightMapGrid(pointWidth, heightCalc, vertexColorCalc) {
         var geometry = new THREE.Geometry();
+        var unit = 5;
         for (var y = 0; y < pointWidth; y++) {
             for (var x = 0; x < pointWidth; x++) {
-                var px = -pointWidth / 2 + x;
-                var py = -pointWidth / 2 + y;
+                var px = -pointWidth * unit / 2 + x * unit;
+                var py = -pointWidth * unit / 2 + y * unit;
                 geometry.vertices.push(new THREE.Vector3(px, heightCalc(x, y), py));
             }
         }
@@ -813,8 +814,8 @@
         function Land(parent, colliderGroup) {
             this.parent = parent;
             this.colliderGroup = colliderGroup;
-            // 100 points width and height centered around 0,0
-            var pointWidth = 100;
+            // points width and height centered around 0,0
+            var pointWidth = 40;
             var details = 200;
             var map = new ProceduralTerrain({
                 height: pointWidth,
@@ -863,7 +864,7 @@
                 var distanceFromCenter = Math.sqrt(cx * cx + cy * cy);
                 // let's make sure the area around map position 0,0 isn't too crazy
                 // further from center of map allows for more variation of height scale
-                var scale = distanceFromCenter / 5;
+                var scale = distanceFromCenter * 5 / 5;
                 // lets center our height scale around zero so we have some above and below water
                 var height = heightFromNoise * scale - 5;
                 return height;

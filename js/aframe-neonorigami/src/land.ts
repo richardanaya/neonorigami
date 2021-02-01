@@ -2,10 +2,11 @@ import { ProceduralTerrain } from "./terrain"
 
 function heightMapGrid(pointWidth, heightCalc, vertexColorCalc) {
     const geometry = new THREE.Geometry();
+    const unit = 5;
     for (let y = 0; y < pointWidth; y++) {
         for (let x = 0; x < pointWidth; x++) {
-            let px = -pointWidth / 2 + x;
-            let py = -pointWidth / 2 + y;
+            let px = -pointWidth * unit / 2 + x * unit;
+            let py = -pointWidth * unit / 2 + y * unit;
             geometry.vertices.push(
                 new THREE.Vector3(px, heightCalc(x, y), py),
             );
@@ -61,8 +62,8 @@ export class Land {
     private landShader: any;
     private baseShader: any;
     constructor(private parent, private colliderGroup) {
-        // 100 points width and height centered around 0,0
-        const pointWidth = 100;
+        // points width and height centered around 0,0
+        const pointWidth = 40;
 
         const details = 200;
         var map = new ProceduralTerrain({
@@ -119,7 +120,7 @@ export class Land {
             let distanceFromCenter = Math.sqrt(cx * cx + cy * cy);
             // let's make sure the area around map position 0,0 isn't too crazy
             // further from center of map allows for more variation of height scale
-            let scale = distanceFromCenter / 5;
+            let scale = distanceFromCenter * 5 / 5;
             // lets center our height scale around zero so we have some above and below water
             let height = heightFromNoise * scale - 5;
             return height;

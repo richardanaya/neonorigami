@@ -931,10 +931,12 @@
             // 100 points width and height centered around 0,0
             const pointWidth = 200;
 
-            this.lighting = new Lighting(renderer, this.scene);
-            this.sky = new Sky(this.el.object3D);
-            this.land = new Land(this.el.object3D, pointWidth);
-            this.sea = new Sea(this.el.object3D, pointWidth);
+            let group = new THREE.Group();
+            this.lighting = new Lighting(renderer, group);
+            this.sky = new Sky(group);
+            this.land = new Land(group, pointWidth);
+            this.sea = new Sea(group, pointWidth);
+            this.el.setObject3D("mesh",group);
         },
         update: function (oldData) {
             if (oldData["sky-color"] != this.data["sky-color"]) {

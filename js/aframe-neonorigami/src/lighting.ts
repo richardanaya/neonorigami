@@ -6,19 +6,9 @@ export class Lighting {
 
         // TODO: make lights that match environment for environment maps
 
-        const geometry = new THREE.BoxGeometry();
-        //geometry.deleteAttribute( 'uv' );
 
-        const mainLight = new THREE.PointLight(0xffffff, 50, 0, 2);
-        envScene.add(mainLight);
+        envScene.background = new THREE.Color(0x444444)
 
-        const lightMaterial = new THREE.MeshLambertMaterial({ color: 0x000000, emissive: 0xffffff, emissiveIntensity: 10 });
-
-        const light1 = new THREE.Mesh(geometry, lightMaterial);
-        light1.material.color.setHex(0xffffff);
-        light1.position.set(- 5, 2, 0);
-        light1.scale.set(0.1, 1, 1);
-        envScene.add(light1);
 
         // Generate environment map from scene
         const pmremGenerator = new THREE.PMREMGenerator(renderer);

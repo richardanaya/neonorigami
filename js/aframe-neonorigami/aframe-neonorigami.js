@@ -9,16 +9,7 @@
             this.scene = scene;
             var envScene = new THREE.Scene();
             // TODO: make lights that match environment for environment maps
-            var geometry = new THREE.BoxGeometry();
-            //geometry.deleteAttribute( 'uv' );
-            var mainLight = new THREE.PointLight(0xffffff, 50, 0, 2);
-            envScene.add(mainLight);
-            var lightMaterial = new THREE.MeshLambertMaterial({ color: 0x000000, emissive: 0xffffff, emissiveIntensity: 10 });
-            var light1 = new THREE.Mesh(geometry, lightMaterial);
-            light1.material.color.setHex(0xffffff);
-            light1.position.set(-5, 2, 0);
-            light1.scale.set(0.1, 1, 1);
-            envScene.add(light1);
+            envScene.background = new THREE.Color(0x444444);
             // Generate environment map from scene
             var pmremGenerator = new THREE.PMREMGenerator(renderer);
             var generatedCubeRenderTarget = pmremGenerator.fromScene(envScene, 0.04);
@@ -943,10 +934,11 @@
 
             // get the three js scene
             const renderer = this.el.closest("a-scene").renderer;
-            //renderer.toneMapping = THREE.ACESFilmicToneMapping;
-            //renderer.toneMappingExposure = 1.2;
+            renderer.toneMapping = THREE.ACESFilmicToneMapping;
+            //renderer.toneMappingExposure = 1;
             renderer.shadowMap.enabled = true;
-            renderer.physicallyCorrectLights = true;
+            //renderer.physicallyCorrectLights = true;
+            renderer.gammaOutput = 2.2;
             renderer.gammaOutput = true;
             this.scene = this.el.closest("a-scene").object3D;
             this.scene.background = new THREE.Color(0xFFFFFF);

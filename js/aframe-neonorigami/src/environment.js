@@ -12,10 +12,11 @@ AFRAME.registerComponent('neon-origami-environment', {
 
         // get the three js scene
         const renderer = this.el.closest("a-scene").renderer;
-        //renderer.toneMapping = THREE.ACESFilmicToneMapping;
-        //renderer.toneMappingExposure = 1.2;
+        renderer.toneMapping = THREE.ACESFilmicToneMapping;
+        //renderer.toneMappingExposure = 1;
         renderer.shadowMap.enabled = true;
-        renderer.physicallyCorrectLights = true;
+        //renderer.physicallyCorrectLights = true;
+        renderer.gammaOutput = 2.2;
         renderer.gammaOutput = true;
         this.scene = this.el.closest("a-scene").object3D;
         this.scene.background = new THREE.Color(0xFFFFFF);

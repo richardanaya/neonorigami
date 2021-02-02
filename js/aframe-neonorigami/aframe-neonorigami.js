@@ -947,6 +947,8 @@
             renderer.toneMapping = THREE.ACESFilmicToneMapping;
             renderer.toneMappingExposure = 1.2;
             renderer.shadowMap.enabled = true;
+            renderer.gammaOutput = true;
+            renderer.gammaFactor = 2.2;
             this.scene = this.el.closest("a-scene").object3D;
             this.scene.background = new THREE.Color(0xFFFFFF);
 

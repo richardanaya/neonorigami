@@ -52,6 +52,8 @@ Supported Devices:
 </html>
 ```
 
+See demo [here](https://jsfiddle.net/9zc8d7mq/)
+
 # Developing the Neon Origami app
 
 ```bash

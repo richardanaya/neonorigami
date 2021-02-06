@@ -23,7 +23,7 @@
   },
   "homepage": "https://github.com/richardanaya/neonorigami#readme",
   "dependencies": {
-    "aframe": "^1.1.0",
+    "aframe": "^1.2.0",
     "cyberdeck": "file:../cyberdeck",
     "gun": "^0.2020.520",
     "lit-element": "^2.4.0",

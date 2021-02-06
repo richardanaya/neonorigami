@@ -5,7 +5,8 @@ import { Sea } from "./sea"
 
 AFRAME.registerComponent('neon-origami-environment', {
     schema: {
-        "sky-color": { type: 'color', default: '#87CEEB' }
+        "skyColor": { type: 'color', default: '#87CEEB' },
+        "urlBase": { type: 'string', default: '' }
     },
     init: function () {
         this.didChange = true;
@@ -16,7 +17,7 @@ AFRAME.registerComponent('neon-origami-environment', {
         //renderer.toneMappingExposure = 1;
         renderer.shadowMap.enabled = true;
         //renderer.physicallyCorrectLights = true;
-        renderer.gammaOutput = 2.2;
+        renderer.outputEncoding = 2.2;
         renderer.gammaOutput = true;
         this.scene = this.el.closest("a-scene").object3D;
         this.scene.background = new THREE.Color(0xFFFFFF);
@@ -24,7 +25,7 @@ AFRAME.registerComponent('neon-origami-environment', {
         let colliderGroup = new THREE.Object3D()
         this.lighting = new Lighting(renderer, this.scene);
         this.sky = new Sky(this.scene);
-        this.land = new Land(this.scene, colliderGroup);
+        this.land = new Land(this.scene, colliderGroup, this.data.urlBase);
         this.sea = new Sea(colliderGroup);
 
         // The arc teleport extension recursively looks at geomtry attached to a-frame element
@@ -41,14 +42,14 @@ AFRAME.registerComponent('neon-origami-environment', {
         });
     },
     update: function (oldData) {
-        if (oldData["sky-color"] != this.data["sky-color"]) {
+        if (oldData.skyColor != this.data.skyColor) {
             this.didChange = true;
         }
     },
     tick: function () {
         if (this.didChange) {
             // get the three js scene
-            this.scene.background = new THREE.Color(this.data["sky-color"]);
+            this.scene.background = new THREE.Color(this.data.skyColor);
             this.didChange = false;
         }
     }

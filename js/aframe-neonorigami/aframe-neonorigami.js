@@ -35,6 +35,30 @@
         return Sky;
     }());
 
+    /*! *****************************************************************************
+    Copyright (c) Microsoft Corporation.
+
+    Permission to use, copy, modify, and/or distribute this software for any
+    purpose with or without fee is hereby granted.
+
+    THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
+    REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
+    AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
+    INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
+    LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+    OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
+    PERFORMANCE OF THIS SOFTWARE.
+    ***************************************************************************** */
+
+    /** @deprecated */
+    function __spreadArrays() {
+        for (var s = 0, i = 0, il = arguments.length; i < il; i++) s += arguments[i].length;
+        for (var r = Array(s), k = 0, i = 0; i < il; i++)
+            for (var a = arguments[i], j = 0, jl = a.length; j < jl; j++, k++)
+                r[k] = a[j];
+        return r;
+    }
+
     /*CC0 1.0 Universal
 
     Statement of Purpose
@@ -765,32 +789,50 @@
     };
 
     function heightMapGrid(pointWidth, heightCalc, vertexColorCalc) {
-        var geometry = new THREE.Geometry();
+        var terrain = [];
+        var vertices = [];
+        var uv1 = [];
+        //const uv2 = []
+        var colors = [];
         var unit = 5;
         for (var y = 0; y < pointWidth; y++) {
             for (var x = 0; x < pointWidth; x++) {
                 var px = -pointWidth * unit / 2 + x * unit;
                 var py = -pointWidth * unit / 2 + y * unit;
-                geometry.vertices.push(new THREE.Vector3(px, heightCalc(x, y), py));
+                terrain.push([px, heightCalc(x, y), py]);
             }
         }
-        geometry.faceVertexUvs[1] = [];
         for (var y = 0; y < pointWidth - 1; y++) {
             for (var x = 0; x < pointWidth - 1; x++) {
                 var curPoint = y * pointWidth + x;
-                var top = new THREE.Face3(curPoint, curPoint + pointWidth, curPoint + 1);
-                var bot = new THREE.Face3(curPoint + 1, curPoint + pointWidth, curPoint + pointWidth + 1);
-                geometry.faces.push(top, bot);
-                geometry.faceVertexUvs[0].push([new THREE.Vector2(0, 0), new THREE.Vector2(0, 1), new THREE.Vector2(1, 0)], [new THREE.Vector2(1, 0), new THREE.Vector2(0, 1), new THREE.Vector2(1, 1)]);
-                var dx = 1 / (pointWidth - 1);
-                var dy = 1 / (pointWidth - 1);
-                geometry.faceVertexUvs[1].push([new THREE.Vector2(x * dx, y * dy), new THREE.Vector2(x * dx, y * dy + dy), new THREE.Vector2(x * dx + dx, y * dy)], [new THREE.Vector2(x * dx + dx, y * dy), new THREE.Vector2(x * dx, y * dy + dy), new THREE.Vector2(x * dx + dx, y * dy + dy)]);
+                vertices.push.apply(vertices, __spreadArrays(terrain[curPoint], terrain[curPoint + pointWidth], terrain[curPoint + 1], terrain[curPoint + 1], terrain[curPoint + pointWidth], terrain[curPoint + pointWidth + 1]));
+                uv1.push(
+                // top triangle uv for texture
+                0, 0, 0, 1, 1, 0, 
+                // bottom triangle uv for texture
+                1, 0, 0, 1, 1, 1);
+                /*let dx = 1 / (pointWidth - 1)
+                let dy = 1 / (pointWidth - 1)
+                uv2.push(
+                    // top triangle alpha
+                    x * dx, y * dy,
+                    x * dx, y * dy + dy,
+                    x * dx + dx, y * dy,
+                    // bottom triangle alpha
+                    x * dx + dx, y * dy,
+                    x * dx, y * dy + dy,
+                    x * dx + dx, y * dy + dy
+                );*/
                 if (vertexColorCalc) {
-                    top.vertexColors.push(vertexColorCalc(x, y), vertexColorCalc(x, y + 1), vertexColorCalc(x + 1, y));
-                    bot.vertexColors.push(vertexColorCalc(x + 1, y), vertexColorCalc(x, y + 1), vertexColorCalc(x + 1, y + 1));
+                    colors.push.apply(colors, __spreadArrays(vertexColorCalc(x, y), vertexColorCalc(x, y + 1), vertexColorCalc(x + 1, y), vertexColorCalc(x + 1, y), vertexColorCalc(x, y + 1), vertexColorCalc(x + 1, y + 1)));
                 }
             }
         }
+        var geometry = new THREE.BufferGeometry();
+        geometry.setAttribute('position', new THREE.BufferAttribute(new Float32Array(vertices), 3));
+        geometry.setAttribute('uv', new THREE.BufferAttribute(new Float32Array(uv1), 2));
+        //geometry.setAttribute('uv2', new THREE.BufferAttribute(new Float32Array(uv2), 2));
+        geometry.setAttribute('color', new THREE.BufferAttribute(new Float32Array(colors), 3));
         geometry.computeFaceNormals();
         geometry.computeVertexNormals();
         return geometry;
@@ -800,7 +842,7 @@
         return texture;
     }
     var Land = /** @class */ (function () {
-        function Land(parent, colliderGroup) {
+        function Land(parent, colliderGroup, environmentURLBase) {
             this.parent = parent;
             this.colliderGroup = colliderGroup;
             // points width and height centered around 0,0
@@ -833,11 +875,11 @@
                         )
                     }*/
             var desertShader = new THREE.MeshStandardMaterial({
-                map: infiniteWrap(loader.load('Ground027_2K_Color.jpg')),
-                normalMap: infiniteWrap(loader.load('Ground027_2K_Normal.jpg')),
+                map: infiniteWrap(loader.load(environmentURLBase + 'desert/desert_color.jpg')),
+                normalMap: infiniteWrap(loader.load(environmentURLBase + 'desert/desert_normal.jpg')),
                 roughness: 1.3,
-                aoMap: infiniteWrap(loader.load('Ground027_2K_AmbientOcclusion.jpg')),
-                roughnessMap: infiniteWrap(loader.load('Ground027_2K_Roughness.jpg')),
+                aoMap: infiniteWrap(loader.load(environmentURLBase + 'desert/desert_ao.jpg')),
+                roughnessMap: infiniteWrap(loader.load(environmentURLBase + 'desert/desert_roughness.jpg')),
                 vertexColors: THREE.VertexColors,
             });
             var min = 100000;
@@ -867,7 +909,7 @@
                 var height = heightFromNoise * scale * taper * nearTaper;
                 return height;
             }, function (x, y) {
-                return new THREE.Color(color[y * pointWidth + x], color[y * pointWidth + x], color[y * pointWidth + x]);
+                return [color[y * pointWidth + x], color[y * pointWidth + x], color[y * pointWidth + x]];
             });
             /*  const top = new THREE.Mesh(geo, this.landShader);
               top.position.y = .01;
@@ -879,13 +921,17 @@
             var w = 100;
             var h = 100;
             var geometry = new THREE.PlaneGeometry(w * 5, h * 5, 1, 1);
-            var uvs = geometry.faceVertexUvs[0];
-            uvs[0][0].set(0, h);
-            uvs[0][1].set(0, 0);
-            uvs[0][2].set(w, h);
-            uvs[1][0].set(0, 0);
-            uvs[1][1].set(w, 0);
-            uvs[1][2].set(w, h);
+            var uvs = geometry.attributes.uv.array;
+            uvs[1] = h;
+            uvs[2] = w;
+            uvs[3] = h;
+            uvs[3] = w;
+            geometry.setAttribute('color', new THREE.BufferAttribute(new Float32Array([
+                1, 1, 1,
+                1, 1, 1,
+                1, 1, 1,
+                1, 1, 1,
+            ]), 3));
             var mesh = new THREE.Mesh(geometry, desertShader);
             mesh.rotation.x = -Math.PI / 2;
             mesh.position.y = -.1;
@@ -909,13 +955,11 @@
             var w = 5000;
             var h = 5000;
             var geometry = new THREE.PlaneGeometry(w, h, 1, 1);
-            var uvs = geometry.faceVertexUvs[0];
-            uvs[0][0].set(0, h);
-            uvs[0][1].set(0, 0);
-            uvs[0][2].set(w, h);
-            uvs[1][0].set(0, 0);
-            uvs[1][1].set(w, 0);
-            uvs[1][2].set(w, h);
+            var uvs = geometry.attributes.uv.array;
+            uvs[1] = h;
+            uvs[2] = w;
+            uvs[3] = h;
+            uvs[3] = w;
             var mesh = new THREE.Mesh(geometry, this.waterShader);
             mesh.rotation.x = -Math.PI / 2;
             //this.parent.add(mesh);
@@ -925,7 +969,8 @@
 
     AFRAME.registerComponent('neon-origami-environment', {
         schema: {
-            "sky-color": { type: 'color', default: '#87CEEB' }
+            "skyColor": { type: 'color', default: '#87CEEB' },
+            "urlBase": { type: 'string', default: '' }
         },
         init: function () {
             this.didChange = true;
@@ -936,7 +981,7 @@
             //renderer.toneMappingExposure = 1;
             renderer.shadowMap.enabled = true;
             //renderer.physicallyCorrectLights = true;
-            renderer.gammaOutput = 2.2;
+            renderer.outputEncoding = 2.2;
             renderer.gammaOutput = true;
             this.scene = this.el.closest("a-scene").object3D;
             this.scene.background = new THREE.Color(0xFFFFFF);
@@ -944,7 +989,7 @@
             let colliderGroup = new THREE.Object3D();
             this.lighting = new Lighting(renderer, this.scene);
             this.sky = new Sky(this.scene);
-            this.land = new Land(this.scene, colliderGroup);
+            this.land = new Land(this.scene, colliderGroup, this.data.urlBase);
             this.sea = new Sea(colliderGroup);
 
             // The arc teleport extension recursively looks at geomtry attached to a-frame element
@@ -961,14 +1006,14 @@
             });
         },
         update: function (oldData) {
-            if (oldData["sky-color"] != this.data["sky-color"]) {
+            if (oldData.skyColor != this.data.skyColor) {
                 this.didChange = true;
             }
         },
         tick: function () {
             if (this.didChange) {
                 // get the three js scene
-                this.scene.background = new THREE.Color(this.data["sky-color"]);
+                this.scene.background = new THREE.Color(this.data.skyColor);
                 this.didChange = false;
             }
         }

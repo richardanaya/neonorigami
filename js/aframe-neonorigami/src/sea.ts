@@ -32,13 +32,11 @@ export class Sea {
         const h = 5000;
         const geometry = new THREE.PlaneGeometry(w, h, 1, 1);
 
-        const uvs = geometry.faceVertexUvs[0];
-        uvs[0][0].set(0, h);
-        uvs[0][1].set(0, 0);
-        uvs[0][2].set(w, h);
-        uvs[1][0].set(0, 0);
-        uvs[1][1].set(w, 0);
-        uvs[1][2].set(w, h);
+        const uvs = geometry.attributes.uv.array;
+        uvs[1] = h;
+        uvs[2] = w;
+        uvs[3] = h;
+        uvs[3] = w;
         const mesh = new THREE.Mesh(geometry, this.waterShader);
         mesh.rotation.x = -Math.PI / 2;
         //this.parent.add(mesh);

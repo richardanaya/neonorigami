@@ -17,8 +17,8 @@ AFRAME.registerComponent('neon-origami-environment', {
         //renderer.toneMappingExposure = 1;
         //renderer.shadowMap.enabled = true;
         //renderer.physicallyCorrectLights = true;
-        renderer.outputEncoding = THREE.CubeUVReflectionMapping;
-        renderer.gammaOutput = true;
+        //renderer.outputEncoding = THREE.CubeUVReflectionMapping;
+        //renderer.gammaOutput = true;
         this.scene = this.el.closest("a-scene").object3D;
         this.scene.background = new THREE.Color(0xFFFFFF);
 

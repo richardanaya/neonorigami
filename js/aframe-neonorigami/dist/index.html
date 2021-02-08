@@ -27,9 +27,10 @@
       </a-entity>
       <a-entity id="right-hand" oculus-touch-controls="hand: right"></a-entity>
     </a-entity>
-    <a-entity class="collision"
-      neon-origami-environment="url-base:https://cdn.jsdelivr.net/gh/richardanaya/neonorigami/environment/" />
-    <a-box id="foo" gltf-model="url(mat/MeetMat.gltf)" position="0 2 -10" />
+    <a-entity class="collision" neon-origami-environment />
+    <a-entity id="foo" gltf-model="url(mat/MeetMat.gltf)" />
+    <a-entity id="leftHand" hand-tracking-controls="hand: left;"></a-entity>
+    <a-entity id="rightHand" hand-tracking-controls="hand: right;"></a-entity>
   </a-scene>
 </body>
 

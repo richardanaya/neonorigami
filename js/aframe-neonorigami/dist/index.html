@@ -31,6 +31,15 @@
     <a-entity id="foo" gltf-model="url(mat/MeetMat.gltf)" />
     <a-entity id="leftHand" hand-controls="hand: left; handModelStyle: lowPoly; color: #ffcccc"></a-entity>
     <a-entity id="rightHand" hand-controls="hand: right; handModelStyle: lowPoly; color: #ffcccc"></a-entity>
+    <script>
+      let rightHand = document.querySelector("#rightHand");
+      rightHand.addEventListener("pistolstart", () => {
+        rightHand.components["hand-controls"].data.color = "green"
+      })
+      rightHand.addEventListener("pistolend", () => {
+        rightHand.components["hand-controls"].data.color = "blue"
+      })
+    </script>
   </a-scene>
 </body>
 
